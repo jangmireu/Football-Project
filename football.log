@@ -352,3 +352,42 @@ java.lang.IllegalArgumentException: Invalid character found in method name [0x16
 2025-01-09T21:11:18.130+09:00  INFO 21724 --- [PL] [http-nio-0.0.0.0-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2025-01-09T21:11:18.131+09:00  INFO 21724 --- [PL] [http-nio-0.0.0.0-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
 2025-01-09T21:11:47.021+09:00  INFO 21724 --- [PL] [MessageBroker-5] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 6, active threads = 1, queued tasks = 3, completed tasks = 8]
+2025-01-09T21:33:52.549+09:00  INFO 16100 --- [PL] [restartedMain] com.example.football.Application         : Starting Application using Java 21.0.5 with PID 16100 (C:\Users\W10\Desktop\PL Project\PL\target\classes started by W10 in C:\Users\W10\Desktop\PL Project\PL)
+2025-01-09T21:33:52.550+09:00  INFO 16100 --- [PL] [restartedMain] com.example.football.Application         : No active profile set, falling back to 1 default profile: "default"
+2025-01-09T21:33:52.582+09:00  INFO 16100 --- [PL] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-09T21:33:52.582+09:00  INFO 16100 --- [PL] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-09T21:33:53.036+09:00  INFO 16100 --- [PL] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-09T21:33:53.087+09:00  INFO 16100 --- [PL] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 45 ms. Found 7 JPA repository interfaces.
+2025-01-09T21:33:53.475+09:00  INFO 16100 --- [PL] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-01-09T21:33:53.485+09:00  INFO 16100 --- [PL] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-01-09T21:33:53.485+09:00  INFO 16100 --- [PL] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-01-09T21:33:53.521+09:00  INFO 16100 --- [PL] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-01-09T21:33:53.521+09:00  INFO 16100 --- [PL] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 938 ms
+2025-01-09T21:33:53.630+09:00  INFO 16100 --- [PL] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-01-09T21:33:53.674+09:00  INFO 16100 --- [PL] [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.10.Final
+2025-01-09T21:33:53.699+09:00  INFO 16100 --- [PL] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-01-09T21:33:53.870+09:00  INFO 16100 --- [PL] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-01-09T21:33:53.891+09:00  INFO 16100 --- [PL] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-01-09T21:33:54.124+09:00  INFO 16100 --- [PL] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3e104ba9
+2025-01-09T21:33:54.126+09:00  INFO 16100 --- [PL] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-01-09T21:33:54.165+09:00  WARN 16100 --- [PL] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-09T21:33:54.860+09:00  INFO 16100 --- [PL] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-01-09T21:33:54.918+09:00  INFO 16100 --- [PL] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09T21:33:55.150+09:00  INFO 16100 --- [PL] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-01-09T21:33:58.718+09:00  WARN 16100 --- [PL] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-09T21:33:58.955+09:00  INFO 16100 --- [PL] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-01-09T21:33:58.983+09:00  INFO 16100 --- [PL] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2025-01-09T21:33:58.984+09:00  INFO 16100 --- [PL] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2025-01-09T21:33:58.985+09:00  INFO 16100 --- [PL] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@6e7eb19c]]
+2025-01-09T21:33:58.985+09:00  INFO 16100 --- [PL] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2025-01-09T21:33:58.992+09:00  INFO 16100 --- [PL] [restartedMain] com.example.football.Application         : Started Application in 6.706 seconds (process running for 7.143)
+2025-01-09T21:34:03.433+09:00  INFO 16100 --- [PL] [http-nio-0.0.0.0-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-01-09T21:34:03.433+09:00  INFO 16100 --- [PL] [http-nio-0.0.0.0-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-01-09T21:34:03.434+09:00  INFO 16100 --- [PL] [http-nio-0.0.0.0-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-01-09T21:34:21.104+09:00  INFO 16100 --- [PL] [RMI TCP Connection(2)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
+2025-01-09T21:34:21.106+09:00  INFO 16100 --- [PL] [RMI TCP Connection(2)-127.0.0.1] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2025-01-09T21:34:21.106+09:00  INFO 16100 --- [PL] [RMI TCP Connection(2)-127.0.0.1] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@6e7eb19c]]
+2025-01-09T21:34:21.106+09:00  INFO 16100 --- [PL] [RMI TCP Connection(2)-127.0.0.1] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2025-01-09T21:34:21.113+09:00  INFO 16100 --- [PL] [RMI TCP Connection(2)-127.0.0.1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-01-09T21:34:21.115+09:00  INFO 16100 --- [PL] [RMI TCP Connection(2)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-01-09T21:34:21.119+09:00  INFO 16100 --- [PL] [RMI TCP Connection(2)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
