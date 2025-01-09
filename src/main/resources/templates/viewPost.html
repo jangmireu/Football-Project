@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>게시글 상세 보기</title>
+<style>
+/* 기본 스타일 */
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f5f5f5;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	
+}
+
+/* 메인 컨텐츠 */
+.content {
+	width: 90%;
+	max-width: 800px;
+	background-color: white;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+	text-align: left;
+}
+
+/* 제목 */
+h1 {
+	font-size: 24px;
+	color: #333;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+/* 작성자, 조회수, 작성일 */
+.meta-info {
+	display: flex;
+	justify-content: space-between;
+	font-size: 14px;
+	color: #555;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 10px;
+}
+
+/* 내용 섹션 */
+.content-wrapper {
+	margin-bottom: 30px;
+}
+
+.content-wrapper p {
+	font-size: 16px;
+	color: #444;
+	line-height: 1.6;
+}
+
+/* 답글 섹션 */
+.reply-wrapper {
+	background-color: #f9f9f9;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+	margin-bottom: 20px;
+}
+
+.reply-wrapper h2 {
+	font-size: 18px;
+	margin-bottom: 15px;
+	color: #333;
+}
+
+/* 답글 리스트 */
+.reply-list {
+	margin-bottom: 20px;
+}
+
+.reply-item {
+	background-color: #fff;
+	padding: 15px;
+	margin-bottom: 10px;
+	border-radius: 8px;
+	border: 1px solid #ddd;
+	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.reply-item p {
+	margin: 5px 0;
+	font-size: 14px;
+	color: #555;
+}
+/* 기본 스타일은 그대로 유지 */
+.reply-actions {
+	margin-top: 10px; /* 답글 내용과 버튼 간격 */
+	display: flex;
+	justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
+	gap: 10px; /* 버튼 간격 */
+}
+
+.reply-actions a, .reply-actions form button {
+	background-color: #333; /* 버튼 색상 */
+	color: white;
+	padding: 5px 15px; /* 버튼 내부 여백 */
+	border: none;
+	border-radius: 5px; /* 둥근 모서리 */
+	font-size: 12px; /* 작은 버튼 글씨 크기 */
+	cursor: pointer;
+	text-decoration: none; /* 링크 밑줄 제거 */
+	display: inline-block; /* 버튼처럼 보이도록 */
+	text-align: center;
+}
+
+.reply-actions a:hover, .reply-actions form button:hover {
+	background-color: #555; /* 버튼 hover 효과 */
+	color: white;
+}
+
+.reply-actions .delete-button {
+	background-color: #d9534f; /* 삭제 버튼 색상 */
+}
+
+.reply-actions .delete-button:hover {
+	background-color: #c9302c; /* 삭제 버튼 hover */
+}
+
+.reply-item strong {
+	color: #333;
+}
+
+/* 답글 작성 폼 */
+.reply-form {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.reply-form textarea {
+	width: 100%;
+	padding: 10px;
+	font-size: 14px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	resize: none;
+}
+
+.reply-form button {
+	align-self: flex-end;
+	background-color: #333;
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+.reply-form button:hover {
+	background-color: #555;
+}
+
+/* 버튼 섹션 */
+.button-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 20px;
+}
+
+.button-container button, .button-container a {
+	background-color: #333;
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 5px;
+	font-size: 14px;
+	text-decoration: none;
+	text-align: center;
+	cursor: pointer;
+}
+
+.button-container button:hover, .button-container a:hover {
+	background-color: #555;
+}
+
+.delete-button {
+	background-color: #d9534f;
+}
+
+.delete-button:hover {
+	background-color: #c9302c;
+}
+</style>
+</head>
+<body>
+	<!-- 메인 컨텐츠 -->
+	<div class="content">
+		<h1 th:text="${post.title}">제목</h1>
+
+		<!-- 작성자, 조회수, 작성일 -->
+		<div class="meta-info">
+			<span><strong>작성자:</strong> <span th:text="${post.author}">작성자</span></span>
+			<span><strong>조회수:</strong> <span th:text="${post.views}">조회수</span></span>
+			<span><strong>작성일:</strong> <span
+				th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span></span>
+		</div>
+
+		<!-- 내용 -->
+		<div class="content-wrapper">
+			<p th:text="${post.content}">내용</p>
+		</div>
+
+		<!-- 답글 섹션 -->
+		<div class="reply-wrapper">
+			<h2>답글</h2>
+
+			<!-- 답글 목록 -->
+			<div class="reply-list">
+				<div th:each="reply : ${replies}" class="reply-item">
+					<p>
+						<strong th:text="${reply.author}">작성자</strong> <span
+							th:text="${#temporals.format(reply.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+					</p>
+					<p th:text="${reply.content}">답글 내용</p>
+
+					<!-- 수정 및 삭제 버튼 -->
+					<div th:if="${session.loggedInUsername == reply.author}"
+						class="reply-actions">
+						<a
+							th:href="@{/community/{postId}/reply/{replyId}/edit(postId=${post.id}, replyId=${reply.id})}">수정</a>
+						<form
+							th:action="@{/community/{postId}/reply/{replyId}/delete(postId=${post.id}, replyId=${reply.id})}"
+							method="post" style="display: inline;">
+							<button type="submit" class="delete-button"
+								onclick="return confirm('이 답글을 삭제하시겠습니까?')">삭제</button>
+						</form>
+					</div>
+				</div>
+
+			</div>
+
+
+			<!-- 답글 작성 폼 -->
+			<form th:action="@{/community/{id}/reply(id=${post.id})}"
+				method="post" class="reply-form">
+				<textarea name="content" rows="3" placeholder="답글을 입력하세요..."
+					required></textarea>
+				<button type="submit">답글 작성</button>
+			</form>
+		</div>
+
+		<!-- 버튼들 -->
+		<div class="button-container">
+			<button onclick="location.href='/community'">목록으로</button>
+			<div>
+				<a th:if="${session.loggedInUsername == post.author}"
+					th:href="@{/community/{id}/edit(id=${post.id})}">수정</a>
+				<form th:if="${session.loggedInUsername == post.author}"
+					th:action="@{/community/{id}/delete(id=${post.id})}" method="post"
+					style="display: inline;">
+					<button type="submit" class="delete-button"
+						onclick="return confirm('이 게시글을 삭제하시겠습니까?')">삭제</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

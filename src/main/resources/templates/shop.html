@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>포인트 상점</title>
+<style>
+/* 기본 스타일 */
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f5f5f5;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+
+/* 상단 네비게이션 바 */
+.navbar {
+    background-color: #333;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between; /* 로고는 왼쪽, 버튼들은 가운데 */
+    align-items: center;
+    color: white;
+}
+.nav-buttons button {
+    background-color: transparent; /* 버튼 배경 제거 */
+    border: none; /* 테두리 제거 */
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 10px; /* 버튼 크기 조정 */
+}
+.navbar .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 로고 이미지와 텍스트 간 간격 */
+}
+
+.logo-img {
+    width: 40px;
+    height: 40px;
+}
+
+.logo-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 180px; /* 버튼 사이 간격 */
+    margin: 0 auto; /* 버튼들을 가운데로 정렬 */
+}
+
+.nav-buttons button:hover {
+	text-decoration: underline;
+}
+/* 메인 콘텐츠 스타일 */
+.content {
+	flex: 1;
+	padding: 20px;
+	overflow-y: auto;
+	
+}
+
+
+
+.shop-header h1,p{
+
+	justify-content: space-between;
+	margin: 0;
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+
+
+/* 카드 스타일 */
+.card-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	justify-content: center;
+}
+
+.card {
+	background-color: white;
+	width: 250px; /* 카드 너비를 늘림 */
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.card img {
+	max-width: 150px; /* 이미지 크기 조정 */
+	height: 150px; /* 고정된 높이 */
+	border-radius: 5px;
+	object-fit: cover; /* 이미지를 카드 안에서 비율에 맞춰 잘라서 표시 */
+	margin-bottom: 10px;
+}
+
+.card h3 {
+	font-size: 20px;
+	margin: 15px 0;
+}
+
+.card p {
+	font-size: 18px;
+	color: #333;
+	margin: 5px 0;
+}
+
+.card button {
+	margin-top: auto;
+	padding: 10px 20px;
+	font-size: 16px;
+	color: white;
+	background-color: #333;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	width: 100%;
+}
+
+.card button:hover {
+	background-color: #555;
+}
+
+/* 반응형 디자인 */
+@media ( max-width : 768px) {
+	.navbar, .content {
+		flex-direction: column;
+		text-align: center;
+	}
+	.shop-header {
+		flex-direction: column;
+		text-align: center;
+	}
+	.card {
+		width: 100%; /* 모바일에서는 카드가 전체 너비를 차지하도록 설정 */
+	}
+}
+</style>
+</head>
+<body>
+	<!-- 상단 네비게이션 바 -->
+	<div class="navbar">
+		<div class="logo">
+			<img src="/logo.png" alt="홈페이지 로고" class="logo-img"> <span
+				class="logo-text">PL</span>
+		</div>
+		<div class="nav-buttons">
+			<button onclick="location.href='/matches/list'">메인화면</button>
+			<button onclick="location.href='/community'">커뮤니티</button>
+			<button onclick="location.href='/prediction'">승부예측</button>
+			<button onclick="location.href='/past-matches/list'">결과확인</button>  <!-- 추가된 버튼 -->
+			<button onclick="location.href='/shop'">포인트 상점</button>
+		</div>
+	</div>
+
+	<!-- 포인트 상점 콘텐츠 -->
+	<div class="content">
+		<div class="shop-header">
+			<h1>포인트 상점</h1>
+			<p>
+    포인트: 
+    <span th:if="${session.loggedInUser != null}" th:text="${session.loggedInUser?.points ?: 0} + '점'"></span>
+    <span th:if="${session.loggedInUser == null}">0점</span>
+</p>
+		</div>
+		<p th:if="${message != null}" th:text="${message}"
+			style="color: green;"></p>
+
+		<!-- 상품 카드 컨테이너 -->
+		<div class="card-container">
+			<div class="card" th:each="item : ${items}">
+				<img th:src="@{${item.imageUrl}}" alt="상품 이미지">
+				<h3 th:text="${item.name}">상품 이름</h3>
+				<p th:text="${item.price} + ' 포인트'">가격</p>
+				<form th:action="@{/purchase}" method="post">
+					<input type="hidden" name="itemId" th:value="${item.id}" />
+					<button type="submit">구매하기</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
