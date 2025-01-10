@@ -170,18 +170,57 @@
 }
 
 
+/* 광고배너 */
+/* 배너를 감싸는 컨테이너 */
+.banner-container {
+  width: 1500px;          /* 광고 배너 너비 */
+  height: 100px;         /* 광고 배너 높이 */
+  margin: 20px auto;     /* 위아래 여백 + 가로 중앙 정렬 */
+  overflow: hidden;      /* 슬라이드가 넘어가는 부분 숨김 */
+  position: relative;    /* 애니메이션 위치 제어 가능 */
+  border: 2px solid #999;
+  background-color: #fff;
+  box-sizing: border-box;
+  display: flex;         /* 두 슬라이드를 가로로 나란히 배치 */
+}
 
+/* 실제 슬라이드(이미지 묶음) */
+.banner-slide {
+  display: flex;
+  flex-shrink: 0;               /* 폭이 줄어들지 않도록 고정 */
+  animation: slide-left 35s linear infinite; /* 좌측으로 이동하는 애니메이션 */
+}
+
+/* 배너 이미지 스타일 */
+.banner-slide img {
+  width: 300px;  /* 각각의 배너 가로폭 */
+  height: 150px; /* 각각의 배너 높이 */
+  object-fit: cover;
+}
+
+/* 무한 롤링 애니메이션 */
+@keyframes slide-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* 예: 4개 * 300px = 1200px 만큼 왼쪽으로 이동 */
+    transform: translateX(-1200px);
+  }
+}
+/* ----- 배너 관련 스타일 끝 ----- */
 
     </style>
 </head>
 <body>
     <!-- 상단 네비게이션 바 -->
     <div class="navbar">
-        <!-- 로고 및 홈페이지 이름 -->
-        <div class="logo">
-            <img src="/logo.png" alt="홈페이지 로고" class="logo-img">
-            <span class="logo-text">PL</span>
-        </div>
+		<div class="logo">
+			<a href="http://localhost:8080/matches/list" class="logo-link"> <img
+				src="/logo.png" alt="홈페이지 로고" class="logo-img"> <span
+				class="logo-text"></span>
+			</a>
+		</div>
 
         <!-- 네비게이션 버튼 -->
         <div class="nav-buttons">
@@ -227,6 +266,20 @@
 
         <!-- 메인 콘텐츠: 커뮤니티 게시글 목록 -->
         <div class="content">
+			<!-- 배너 전용 컨테이너 -->
+			<div class="banner-container">
+				<!-- 첫 번째 슬라이드 -->
+				<div class="banner-slide">
+					<img src="/ad4.png" alt="배너1"> <img src="/ad2.jpg" alt="배너2">
+					<img src="/ad3.jpg" alt="배너3"> <img src="/ad5.jpg" alt="배너4">
+				</div>
+
+				<!-- 두 번째 슬라이드 (첫 번째 슬라이드와 동일하게 복제) -->
+				<div class="banner-slide">
+					<img src="/ad4.png" alt="배너1"> <img src="/ad2.jpg" alt="배너2">
+					<img src="/ad3.jpg" alt="배너3"> <img src="/ad5.jpg" alt="배너4">
+				</div>
+			</div>
             <h1>커뮤니티</h1>
             <button class="common-button" onclick="location.href='/community/new'">새 글 작성</button>
 
