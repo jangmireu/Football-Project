@@ -14,44 +14,45 @@ body {
 }
 
 /* 상단 네비게이션 바 */
-
 .navbar {
-    background-color: #333;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between; /* 로고는 왼쪽, 버튼들은 가운데 */
-    align-items: center;
-    color: white;
+	background-color: #333;
+	padding: 10px;
+	display: flex;
+	justify-content: space-between; /* 로고는 왼쪽, 버튼들은 가운데 */
+	align-items: center;
+	color: white;
 }
+
 .nav-buttons button {
-    background-color: transparent; /* 버튼 배경 제거 */
-    border: none; /* 테두리 제거 */
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 5px 10px; /* 버튼 크기 조정 */
+	background-color: transparent; /* 버튼 배경 제거 */
+	border: none; /* 테두리 제거 */
+	color: white;
+	font-size: 16px;
+	cursor: pointer;
+	padding: 5px 10px; /* 버튼 크기 조정 */
 }
+
 .navbar .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* 로고 이미지와 텍스트 간 간격 */
+	display: flex;
+	align-items: center;
+	gap: 10px; /* 로고 이미지와 텍스트 간 간격 */
 }
 
 .logo-img {
-    width: 40px;
-    height: 40px;
+	width: 40px;
+	height: 40px;
 }
 
 .logo-text {
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
+	font-size: 18px;
+	font-weight: bold;
+	color: white;
 }
 
 .nav-buttons {
-    display: flex;
-    gap: 180px; /* 버튼 사이 간격 */
-    margin: 0 auto; /* 버튼들을 가운데로 정렬 */
+	display: flex;
+	gap: 180px; /* 버튼 사이 간격 */
+	margin: 0 auto; /* 버튼들을 가운데로 정렬 */
 }
 
 .nav-buttons button:hover {
@@ -93,7 +94,7 @@ body {
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
 	overflow-y: auto;
-	 text-align: center;
+	text-align: center;
 }
 
 /* 테이블 공통 스타일 */
@@ -180,138 +181,180 @@ td {
 
 /* 공통 버튼 스타일 */
 .common-button {
-    background-color: #333; /* 버튼 배경색 */
-    color: white; /* 글자색 */
-    border: none; /* 테두리 제거 */
-    border-radius: 5px; /* 둥근 모서리 */
-    padding: 10px 20px; /* 여백 */
-    font-size: 16px; /* 글자 크기 */
-    cursor: pointer; /* 마우스 포인터 변경 */
-    text-align: center; /* 텍스트 가운데 정렬 */
-    transition: background-color 0.3s; /* 호버 애니메이션 */
-    margin-bottom: 20px; /* 버튼 아래 간격 추가 */
+	background-color: #333; /* 버튼 배경색 */
+	color: white; /* 글자색 */
+	border: none; /* 테두리 제거 */
+	border-radius: 5px; /* 둥근 모서리 */
+	padding: 10px 20px; /* 여백 */
+	font-size: 16px; /* 글자 크기 */
+	cursor: pointer; /* 마우스 포인터 변경 */
+	text-align: center; /* 텍스트 가운데 정렬 */
+	transition: background-color 0.3s; /* 호버 애니메이션 */
+	margin-bottom: 20px; /* 버튼 아래 간격 추가 */
 }
+
 .betting-button {
-    background-color: #333; /* 버튼 배경색 */
-    color: white; /* 글자색 */
-    border: none; /* 테두리 제거 */
-    border-radius: 5px; /* 둥근 모서리 */
-    padding: 5px 10px; /* 여백 */
-    font-size: 16px; /* 글자 크기 */
-    cursor: pointer; /* 마우스 포인터 변경 */
-    text-align: center; /* 텍스트 가운데 정렬 */
-    transition: background-color 0.3s; /* 호버 애니메이션 */
-   
+	background-color: #333; /* 버튼 배경색 */
+	color: white; /* 글자색 */
+	border: none; /* 테두리 제거 */
+	border-radius: 5px; /* 둥근 모서리 */
+	padding: 5px 10px; /* 여백 */
+	font-size: 16px; /* 글자 크기 */
+	cursor: pointer; /* 마우스 포인터 변경 */
+	text-align: center; /* 텍스트 가운데 정렬 */
+	transition: background-color 0.3s; /* 호버 애니메이션 */
 }
 
 .betting-button:hover {
-    background-color: #0056b3; /* 호버 시 더 진한 파란색 */
+	background-color: #0056b3; /* 호버 시 더 진한 파란색 */
 }
 
 .betting-button:active {
-    background-color: #00408d; /* 클릭 시 더 어두운 파란색 */
+	background-color: #00408d; /* 클릭 시 더 어두운 파란색 */
 }
+
+
+/* 광고배너 */
+/* 배너를 감싸는 컨테이너 */
+.banner-container {
+  width: 1500px;          /* 광고 배너 너비 */
+  height: 100px;         /* 광고 배너 높이 */
+  margin: 20px auto;     /* 위아래 여백 + 가로 중앙 정렬 */
+  overflow: hidden;      /* 슬라이드가 넘어가는 부분 숨김 */
+  position: relative;    /* 애니메이션 위치 제어 가능 */
+  border: 2px solid #999;
+  background-color: #fff;
+  box-sizing: border-box;
+  display: flex;         /* 두 슬라이드를 가로로 나란히 배치 */
+}
+
+/* 실제 슬라이드(이미지 묶음) */
+.banner-slide {
+  display: flex;
+  flex-shrink: 0;               /* 폭이 줄어들지 않도록 고정 */
+  animation: slide-left 35s linear infinite; /* 좌측으로 이동하는 애니메이션 */
+}
+
+/* 배너 이미지 스타일 */
+.banner-slide img {
+  width: 300px;  /* 각각의 배너 가로폭 */
+  height: 150px; /* 각각의 배너 높이 */
+  object-fit: cover;
+}
+
+/* 무한 롤링 애니메이션 */
+@keyframes slide-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* 예: 4개 * 300px = 1200px 만큼 왼쪽으로 이동 */
+    transform: translateX(-1200px);
+  }
+}
+/* ----- 배너 관련 스타일 끝 ----- */
 </style>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    let currentMatchIdentifier = null; // 전역 변수로 matchIdentifier 저장
+	document.addEventListener("DOMContentLoaded", function() {
+		let currentMatchIdentifier = null; // 전역 변수로 matchIdentifier 저장
 
-    // 모든 배팅 버튼에 클릭 이벤트 추가
-    document.querySelectorAll(".betting-button").forEach(function (button) {
-        button.addEventListener("click", function () {
-            const matchId = this.dataset.matchId; // 버튼의 data-match-id 속성 값
-            const matchDetails = this.dataset.matchDetails; // 버튼의 data-match-details 속성 값
+		// 모든 배팅 버튼에 클릭 이벤트 추가
+		document.querySelectorAll(".betting-button").forEach(function(button) {
+			button.addEventListener("click", function() {
+				const matchId = this.dataset.matchId; // 버튼의 data-match-id 속성 값
+				const matchDetails = this.dataset.matchDetails; // 버튼의 data-match-details 속성 값
 
-            // 모달 열기 함수 호출
-            openBettingModal(matchId, matchDetails);
-        });
-    });
+				// 모달 열기 함수 호출
+				openBettingModal(matchId, matchDetails);
+			});
+		});
 
-    // 모달 열기
-    window.openBettingModal = function (matchId, matchDetails) {
-        currentMatchIdentifier = matchId; // matchId를 matchIdentifier로 저장
-        document.getElementById("modalOverlay").style.display = "block";
-        document.getElementById("bettingModal").style.display = "block";
-        document.getElementById("betAmount").value = ""; // 배팅 금액 초기화
-        document.getElementById("betChoice").selectedIndex = 0; // 선택 초기화
-        
-        document.getElementById("matchDetails").innerText = matchDetails;
+		// 모달 열기
+		window.openBettingModal = function(matchId, matchDetails) {
+			currentMatchIdentifier = matchId; // matchId를 matchIdentifier로 저장
+			document.getElementById("modalOverlay").style.display = "block";
+			document.getElementById("bettingModal").style.display = "block";
+			document.getElementById("betAmount").value = ""; // 배팅 금액 초기화
+			document.getElementById("betChoice").selectedIndex = 0; // 선택 초기화
 
-        // 폼 제출 이벤트 처리
-        document.getElementById("betForm").onsubmit = function (event) {
-            event.preventDefault(); // 기본 폼 동작 방지
-            submitBet(); // 배팅 요청 함수 호출
-        };
-    };
+			document.getElementById("matchDetails").innerText = matchDetails;
 
-    // 모달 닫기
-    window.closeBettingModal = function () {
-        document.getElementById("modalOverlay").style.display = "none";
-        document.getElementById("bettingModal").style.display = "none";
-        currentMatchIdentifier = null; // 모달 닫을 때 matchIdentifier 초기화
-    };
+			// 폼 제출 이벤트 처리
+			document.getElementById("betForm").onsubmit = function(event) {
+				event.preventDefault(); // 기본 폼 동작 방지
+				submitBet(); // 배팅 요청 함수 호출
+			};
+		};
 
-    // 배팅 요청
-    async function submitBet() {
-        const betAmount = document.getElementById("betAmount").value;
-        const betChoice = document.getElementById("betChoice").value;
+		// 모달 닫기
+		window.closeBettingModal = function() {
+			document.getElementById("modalOverlay").style.display = "none";
+			document.getElementById("bettingModal").style.display = "none";
+			currentMatchIdentifier = null; // 모달 닫을 때 matchIdentifier 초기화
+		};
 
-        if (!betAmount || betAmount <= 0) {
-            alert("유효한 배팅 금액을 입력하세요.");
-            return;
-        }
+		// 배팅 요청
+		async
+		function submitBet() {
+			const betAmount = document.getElementById("betAmount").value;
+			const betChoice = document.getElementById("betChoice").value;
 
-        if (!currentMatchIdentifier) {
-            alert("경기 정보가 없습니다. 다시 시도해주세요.");
-            return;
-        }
+			if (!betAmount || betAmount <= 0) {
+				alert("유효한 배팅 금액을 입력하세요.");
+				return;
+			}
 
-        try {
-            const response = await fetch("/bet", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    matchIdentifier: currentMatchIdentifier,
-                    betAmount: betAmount,
-                    betChoice: betChoice,
-                }),
-            });
+			if (!currentMatchIdentifier) {
+				alert("경기 정보가 없습니다. 다시 시도해주세요.");
+				return;
+			}
 
-            const result = await response.json();
-            alert(result.message); // 서버로부터 받은 메시지를 alert로 표시
-            if (result.success) {
-                closeBettingModal(); // 성공적으로 배팅했으면 모달 닫기
-            }
-        } catch (error) {
-            alert("배팅 중 오류가 발생했습니다.");
-            console.error(error);
-        }
-    }
-});
+			try {
+				const response = await
+				fetch("/bet", {
+					method : "POST",
+					headers : {
+						"Content-Type" : "application/json",
+					},
+					body : JSON.stringify({
+						matchIdentifier : currentMatchIdentifier,
+						betAmount : betAmount,
+						betChoice : betChoice,
+					}),
+				});
 
-
-    </script>
+				const result = await
+				response.json();
+				alert(result.message); // 서버로부터 받은 메시지를 alert로 표시
+				if (result.success) {
+					closeBettingModal(); // 성공적으로 배팅했으면 모달 닫기
+				}
+			} catch (error) {
+				alert("배팅 중 오류가 발생했습니다.");
+				console.error(error);
+			}
+		}
+	});
+</script>
 </head>
 <body>
 	<!-- 상단 네비게이션 바 -->
 	<div class="navbar">
-        <!-- 로고 및 홈페이지 이름 -->
-        <div class="logo">
-            <img src="/logo.png" alt="홈페이지 로고" class="logo-img">
-            <span class="logo-text">PL</span>
-        </div>
+		<!-- 로고 및 홈페이지 이름 -->
+		<div class="logo">
+			<img src="/logo.png" alt="홈페이지 로고" class="logo-img"> <span
+				class="logo-text">PL</span>
+		</div>
 
-        <!-- 네비게이션 버튼 -->
-        <div class="nav-buttons">
-            <button onclick="location.href='/matches/list'">메인화면</button>
-            <button onclick="location.href='/community'">커뮤니티</button>
-            <button onclick="location.href='/prediction'">승부예측</button>
-            <button onclick="location.href='/past-matches/list'">결과확인</button>
-            <button onclick="location.href='/shop'">포인트 상점</button>
-        </div>
-    </div>
+		<!-- 네비게이션 버튼 -->
+		<div class="nav-buttons">
+			<button onclick="location.href='/matches/list'">메인화면</button>
+			<button onclick="location.href='/community'">커뮤니티</button>
+			<button onclick="location.href='/prediction'">승부예측</button>
+			<button onclick="location.href='/past-matches/list'">결과확인</button>
+			<button onclick="location.href='/shop'">포인트 상점</button>
+		</div>
+	</div>
 
 
 	<!-- 메인 컨테이너 -->
@@ -319,10 +362,10 @@ document.addEventListener("DOMContentLoaded", function () {
 		<!-- 사이드바 -->
 		<div class="sidebar">
 			<button class="common-button" onclick="location.href='/signup'">회원가입</button>
-    <button class="common-button" th:if="${session.loggedInUser == null}"
-        onclick="location.href='/login'">로그인</button>
-    <button class="common-button" th:if="${session.loggedInUser != null}"
-        onclick="location.href='/logout'">로그아웃</button>
+			<button class="common-button" th:if="${session.loggedInUser == null}"
+				onclick="location.href='/login'">로그인</button>
+			<button class="common-button" th:if="${session.loggedInUser != null}"
+				onclick="location.href='/logout'">로그아웃</button>
 			<h2>프리미어 리그 순위</h2>
 			<table>
 				<thead>
@@ -336,11 +379,11 @@ document.addEventListener("DOMContentLoaded", function () {
 					<tr th:each="team : ${standings}">
 						<td th:text="${team.position}"
 							style="text-align: left; vertical-align: middle;">1</td>
-						<td>
-                            <img th:src="${team.crestUrl}" alt="팀 로고" width="30" height="30" style="vertical-align: middle;">
-                            <span th:text="${team.koreanTeamName}" style="margin-left: 8px;"></span>
-                        </td>
-                        <td th:text="${team.points}">승점</td>
+						<td><img th:src="${team.crestUrl}" alt="팀 로고" width="30"
+							height="30" style="vertical-align: middle;"> <span
+							th:text="${team.koreanTeamName}" style="margin-left: 8px;"></span>
+						</td>
+						<td th:text="${team.points}">승점</td>
 					</tr>
 				</tbody>
 			</table>
@@ -349,6 +392,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		<!-- 메인 콘텐츠 -->
 		<div class="content">
+			<!-- 배너 전용 컨테이너 -->
+			<div class="banner-container">
+				<!-- 첫 번째 슬라이드 -->
+				<div class="banner-slide">
+					<img src="/ad4.png" alt="배너1"> <img src="/ad2.jpg" alt="배너2">
+					<img src="/ad3.jpg" alt="배너3"> <img src="/ad5.jpg" alt="배너4">
+				</div>
+
+				<!-- 두 번째 슬라이드 (첫 번째 슬라이드와 동일하게 복제) -->
+				<div class="banner-slide">
+					<img src="/ad4.png" alt="배너1"> <img src="/ad2.jpg" alt="배너2">
+					<img src="/ad3.jpg" alt="배너3"> <img src="/ad5.jpg" alt="배너4">
+				</div>
+			</div>
 			<h1>승부예측</h1>
 
 			<div class="table-container">
@@ -363,10 +420,10 @@ document.addEventListener("DOMContentLoaded", function () {
 					</thead>
 					<div>
 						<p>
-    포인트: 
-    <span th:if="${session.loggedInUser != null}" th:text="${session.loggedInUser?.points ?: 0} + '점'"></span>
-    <span th:if="${session.loggedInUser == null}">0점</span>
-</p>
+							포인트: <span th:if="${session.loggedInUser != null}"
+								th:text="${session.loggedInUser?.points ?: 0} + '점'"></span> <span
+								th:if="${session.loggedInUser == null}">0점</span>
+						</p>
 					</div>
 					<tbody>
 						<tr th:each="match : ${matches}">
@@ -388,7 +445,7 @@ document.addEventListener("DOMContentLoaded", function () {
 								<button class="betting-button" th:data-match-id="${match.id}"
 									th:data-match-details="'홈  ' + ${match.homeTeamKoreanName} + '  vs  원정 ' + ${match.awayTeamKoreanName}">
 									배팅하기</button>
-									
+
 							</td>
 						</tr>
 					</tbody>

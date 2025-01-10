@@ -15,42 +15,44 @@ body {
 }
 
 .navbar {
-    background-color: #333;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between; /* 로고는 왼쪽, 버튼들은 가운데 */
-    align-items: center;
-    color: white;
+	background-color: #333;
+	padding: 10px;
+	display: flex;
+	justify-content: space-between; /* 로고는 왼쪽, 버튼들은 가운데 */
+	align-items: center;
+	color: white;
 }
+
 .nav-buttons button {
-    background-color: transparent; /* 버튼 배경 제거 */
-    border: none; /* 테두리 제거 */
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 5px 10px; /* 버튼 크기 조정 */
+	background-color: transparent; /* 버튼 배경 제거 */
+	border: none; /* 테두리 제거 */
+	color: white;
+	font-size: 16px;
+	cursor: pointer;
+	padding: 5px 10px; /* 버튼 크기 조정 */
 }
+
 .navbar .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* 로고 이미지와 텍스트 간 간격 */
+	display: flex;
+	align-items: center;
+	gap: 10px; /* 로고 이미지와 텍스트 간 간격 */
 }
 
 .logo-img {
-    width: 40px;
-    height: 40px;
+	width: 40px;
+	height: 40px;
 }
 
 .logo-text {
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
+	font-size: 18px;
+	font-weight: bold;
+	color: white;
 }
 
 .nav-buttons {
-    display: flex;
-    gap: 180px; /* 버튼 사이 간격 */
-    margin: 0 auto; /* 버튼들을 가운데로 정렬 */
+	display: flex;
+	gap: 180px; /* 버튼 사이 간격 */
+	margin: 0 auto; /* 버튼들을 가운데로 정렬 */
 }
 
 .nav-buttons button:hover {
@@ -156,68 +158,108 @@ td {
 
 /* 공통 버튼 스타일 */
 .common-button {
-    background-color: #333; /* 버튼 배경색 */
-    color: white; /* 글자색 */
-    border: none; /* 테두리 제거 */
-    border-radius: 5px; /* 둥근 모서리 */
-    padding: 10px 20px; /* 여백 */
-    font-size: 16px; /* 글자 크기 */
-    cursor: pointer; /* 마우스 포인터 변경 */
-    text-align: center; /* 텍스트 가운데 정렬 */
-    transition: background-color 0.3s; /* 호버 애니메이션 */
-    margin-bottom: 20px; /* 버튼 아래 간격 추가 */
+	background-color: #333; /* 버튼 배경색 */
+	color: white; /* 글자색 */
+	border: none; /* 테두리 제거 */
+	border-radius: 5px; /* 둥근 모서리 */
+	padding: 10px 20px; /* 여백 */
+	font-size: 16px; /* 글자 크기 */
+	cursor: pointer; /* 마우스 포인터 변경 */
+	text-align: center; /* 텍스트 가운데 정렬 */
+	transition: background-color 0.3s; /* 호버 애니메이션 */
+	margin-bottom: 20px; /* 버튼 아래 간격 추가 */
 }
 
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: none; /* 기본적으로 숨김 */
-    z-index: 1000;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	display: none; /* 기본적으로 숨김 */
+	z-index: 1000;
 }
 
 .modal {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 400px;
-    margin: 100px auto;
-    text-align: center;
-    position: relative;
+	background: white;
+	padding: 20px;
+	border-radius: 8px;
+	max-width: 400px;
+	margin: 100px auto;
+	text-align: center;
+	position: relative;
 }
 
 .modal button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
+	background-color: #333;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 5px;
+	cursor: pointer;
 }
+
 .bet-result-button {
-    background-color: #333; /* 버튼 배경색 */
-    color: white; /* 글자색 */
-    border: none; /* 테두리 제거 */
-    border-radius: 5px; /* 둥근 모서리 */
-    padding: 5px 10px; /* 여백 */
-    font-size: 16px; /* 글자 크기 */
-    cursor: pointer; /* 마우스 포인터 변경 */
-    text-align: center; /* 텍스트 가운데 정렬 */
-    transition: background-color 0.3s; /* 호버 애니메이션 */
-   
+	background-color: #333; /* 버튼 배경색 */
+	color: white; /* 글자색 */
+	border: none; /* 테두리 제거 */
+	border-radius: 5px; /* 둥근 모서리 */
+	padding: 5px 10px; /* 여백 */
+	font-size: 16px; /* 글자 크기 */
+	cursor: pointer; /* 마우스 포인터 변경 */
+	text-align: center; /* 텍스트 가운데 정렬 */
+	transition: background-color 0.3s; /* 호버 애니메이션 */
 }
 
 .bet-result-button:hover {
-    background-color: #0056b3; /* 호버 시 더 진한 파란색 */
+	background-color: #0056b3; /* 호버 시 더 진한 파란색 */
 }
 
 .bet-result-button:active {
-    background-color: #00408d; /* 클릭 시 더 어두운 파란색 */
+	background-color: #00408d; /* 클릭 시 더 어두운 파란색 */
 }
 
+
+/* 광고배너 */
+/* 배너를 감싸는 컨테이너 */
+.banner-container {
+  width: 1500px;          /* 광고 배너 너비 */
+  height: 100px;         /* 광고 배너 높이 */
+  margin: 20px auto;     /* 위아래 여백 + 가로 중앙 정렬 */
+  overflow: hidden;      /* 슬라이드가 넘어가는 부분 숨김 */
+  position: relative;    /* 애니메이션 위치 제어 가능 */
+  border: 2px solid #999;
+  background-color: #fff;
+  box-sizing: border-box;
+  display: flex;         /* 두 슬라이드를 가로로 나란히 배치 */
+}
+
+/* 실제 슬라이드(이미지 묶음) */
+.banner-slide {
+  display: flex;
+  flex-shrink: 0;               /* 폭이 줄어들지 않도록 고정 */
+  animation: slide-left 35s linear infinite; /* 좌측으로 이동하는 애니메이션 */
+}
+
+/* 배너 이미지 스타일 */
+.banner-slide img {
+  width: 300px;  /* 각각의 배너 가로폭 */
+  height: 150px; /* 각각의 배너 높이 */
+  object-fit: cover;
+}
+
+/* 무한 롤링 애니메이션 */
+@keyframes slide-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* 예: 4개 * 300px = 1200px 만큼 왼쪽으로 이동 */
+    transform: translateX(-1200px);
+  }
+}
+/* ----- 배너 관련 스타일 끝 ----- */
 </style>
 <!-- 필요 시 CSS 파일 링크 -->
 </head>
@@ -372,12 +414,12 @@ td {
 		<!-- 사이드바 -->
 		<div class="sidebar">
 			<button class="common-button" onclick="location.href='/signup'">회원가입</button>
-    <button class="common-button" th:if="${session.loggedInUser == null}"
-        onclick="location.href='/login'">로그인</button>
-    <button class="common-button" th:if="${session.loggedInUser != null}"
-        onclick="location.href='/logout'">로그아웃</button>
-				
-				
+			<button class="common-button" th:if="${session.loggedInUser == null}"
+				onclick="location.href='/login'">로그인</button>
+			<button class="common-button" th:if="${session.loggedInUser != null}"
+				onclick="location.href='/logout'">로그아웃</button>
+
+
 			<h2>프리미어 리그 순위</h2>
 			<table>
 				<thead>
@@ -390,11 +432,11 @@ td {
 				<tbody>
 					<tr th:each="team : ${standings}">
 						<td th:text="${team.position}">1</td>
-						<td>
-                            <img th:src="${team.crestUrl}" alt="팀 로고" width="30" height="30" style="vertical-align: middle;">
-                            <span th:text="${team.koreanTeamName}" style="margin-left: 8px;"></span>
-                        </td>
-                        <td th:text="${team.points}">승점</td>
+						<td><img th:src="${team.crestUrl}" alt="팀 로고" width="30"
+							height="30" style="vertical-align: middle;"> <span
+							th:text="${team.koreanTeamName}" style="margin-left: 8px;"></span>
+						</td>
+						<td th:text="${team.points}">승점</td>
 					</tr>
 				</tbody>
 			</table>
@@ -402,6 +444,20 @@ td {
 
 		<!-- 메인 콘텐츠 -->
 		<div class="content">
+			<!-- 배너 전용 컨테이너 -->
+			<div class="banner-container">
+				<!-- 첫 번째 슬라이드 -->
+				<div class="banner-slide">
+					<img src="/ad4.png" alt="배너1"> <img src="/ad2.jpg" alt="배너2">
+					<img src="/ad3.jpg" alt="배너3"> <img src="/ad5.jpg" alt="배너4">
+				</div>
+
+				<!-- 두 번째 슬라이드 (첫 번째 슬라이드와 동일하게 복제) -->
+				<div class="banner-slide">
+					<img src="/ad4.png" alt="배너1"> <img src="/ad2.jpg" alt="배너2">
+					<img src="/ad3.jpg" alt="배너3"> <img src="/ad5.jpg" alt="배너4">
+				</div>
+			</div>
 			<h1>승부예측 결과</h1>
 			<div class="table-container">
 				<table class="match-table">
@@ -414,10 +470,11 @@ td {
 							<th></th>
 						</tr>
 					</thead>
-					
-					 <div>
-        <span>포인트: <span th:text="${userPoints}">0</span>점</span>
-    </div>
+
+					<div>
+						<span>포인트: <span th:text="${userPoints}">0</span>점
+						</span>
+					</div>
 					<tbody>
 						<tr th:each="match : ${matches}">
 							<td>
@@ -433,46 +490,53 @@ td {
 								</div>
 							</td>
 							<td th:text="${match.kstDate}"></td>
-							 <td>
-            <!-- 한 줄로 스코어와 승자 정보 표시 -->
-            <div style="display: flex; align-items: center; justify-content: flex-start;">
-                <span th:text="${match.homeScore} + ' : ' + ${match.awayScore}" style="margin-right: 15px;"></span>
-                <span th:if="${match.matchWinner == 'HOME_TEAM'}" style="margin-right: 15px;">홈팀 승리</span>
-                <span th:if="${match.matchWinner == 'AWAY_TEAM'}" style="margin-right: 15px;">원정팀 승리</span>
-                <span th:if="${match.matchWinner == 'DRAW'}">무승부</span>
-            </div>
-        </td>
-       <td>
-    <button 
-        class="bet-result-button" 
-        th:data-match-id="${match.id}"
-        th:data-home-team="${match.homeTeamKoreanName}"
-        th:data-away-team="${match.awayTeamKoreanName}"
-        th:data-home-score="${match.homeScore}"
-        th:data-away-score="${match.awayScore}"
-        th:data-match-winner="${match.matchWinner}">
-        배팅 결과 확인
-    </button>
-</td>
+							<td>
+								<!-- 한 줄로 스코어와 승자 정보 표시 -->
+								<div
+									style="display: flex; align-items: center; justify-content: flex-start;">
+									<span th:text="${match.homeScore} + ' : ' + ${match.awayScore}"
+										style="margin-right: 15px;"></span> <span
+										th:if="${match.matchWinner == 'HOME_TEAM'}"
+										style="margin-right: 15px;">홈팀 승리</span> <span
+										th:if="${match.matchWinner == 'AWAY_TEAM'}"
+										style="margin-right: 15px;">원정팀 승리</span> <span
+										th:if="${match.matchWinner == 'DRAW'}">무승부</span>
+								</div>
+							</td>
+							<td>
+								<button class="bet-result-button" th:data-match-id="${match.id}"
+									th:data-home-team="${match.homeTeamKoreanName}"
+									th:data-away-team="${match.awayTeamKoreanName}"
+									th:data-home-score="${match.homeScore}"
+									th:data-away-score="${match.awayScore}"
+									th:data-match-winner="${match.matchWinner}">배팅 결과 확인</button>
+							</td>
 
-        
+
 						</tr>
 					</tbody>
 				</table>
 				<!-- 배팅 결과 모달 -->
-<div id="betResultModal" class="modal-overlay">
-    <div class="modal">
-        <h3>결과창</h3>
-        <p><span id="homeTeamName"></span> VS <span id="awayTeamName"></span></p>
-        <p>스코어: <span id="homeScore"></span> : <span id="awayScore"></span></p>
-        <p>결과: <span id="matchResult"></span></p>
-        <p id="betDetails"></p>
-        <button id="claimPointsButton" onclick="claimPoints()" data-bet-id="">포인트 받기</button>
-        <button onclick="closeBetResultModal()">닫기</button>
-    </div>
-</div>
+				<div id="betResultModal" class="modal-overlay">
+					<div class="modal">
+						<h3>결과창</h3>
+						<p>
+							<span id="homeTeamName"></span> VS <span id="awayTeamName"></span>
+						</p>
+						<p>
+							스코어: <span id="homeScore"></span> : <span id="awayScore"></span>
+						</p>
+						<p>
+							결과: <span id="matchResult"></span>
+						</p>
+						<p id="betDetails"></p>
+						<button id="claimPointsButton" onclick="claimPoints()"
+							data-bet-id="">포인트 받기</button>
+						<button onclick="closeBetResultModal()">닫기</button>
+					</div>
+				</div>
 
-				
+
 			</div>
 		</div>
 	</div>
