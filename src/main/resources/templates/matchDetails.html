@@ -263,6 +263,7 @@
         .then(data => {
             username = data;
         });
+    
 
     const matchId = /*[[${match.id}]]*/ 0; // 서버에서 제공하는 match ID
     const socket = new SockJS('/chat-websocket');
