@@ -228,21 +228,23 @@ td {
     </script>
 </head>
 <body>
-	<!-- 상단 네비게이션 바 -->
+	<!-- 상단 네비게이션 바 -->	
 	<div class="navbar">
 		<div class="logo">
-			<img src="/logo.png" alt="홈페이지 로고" class="logo-img"> <span
-				class="logo-text">PL</span>
+			<a href="http://localhost:8080/matches/list" class="logo-link"> <img
+				src="/logo.png" alt="홈페이지 로고" class="logo-img"> <span
+				class="logo-text"></span>
+			</a>
 		</div>
-		<div class="nav-buttons">
-			<button onclick="location.href='/matches/list'">메인화면</button>
-			<button onclick="location.href='/community'">커뮤니티</button>
-			<button onclick="location.href='/prediction'">승부예측</button>
-			<button onclick="location.href='/past-matches/list'">결과확인</button>
-			<!-- 추가된 버튼 -->
-			<button onclick="location.href='/shop'">포인트 상점</button>
-		</div>
-	</div>
+    <div class="nav-buttons">
+        <button onclick="location.href='/matches/list'">메인화면</button>
+        <button onclick="location.href='/community'">커뮤니티</button>
+        <button onclick="location.href='/prediction'">승부예측</button>
+        <button onclick="location.href='/past-matches/list'">결과확인</button>
+        <button onclick="location.href='/shop'">포인트 상점</button>
+    </div>
+</div>
+
 
 
 	<!-- 메인 컨테이너 -->
