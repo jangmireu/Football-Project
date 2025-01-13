@@ -226,6 +226,10 @@
 <p>경기 상태: <span id="matchStatus" th:text="${match.status}">준비 중</span></p>
 
  <div class="chat-rules-button" onclick="openModal()">채팅 규정 보기</div>
+ <div>
+    <span>현재 사용 중인 사용자 수: </span>
+    <span id="userCount">0</span>
+</div>
  <div id="chatRulesModal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">채팅 규정</div>
