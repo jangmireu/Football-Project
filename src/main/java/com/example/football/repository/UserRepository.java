@@ -11,6 +11,7 @@ import com.example.football.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username); // username으로 검색
+    User findByNickname(String nickname); // 닉네임 중복 확인
 
 	User findByUsernameAndPassword(String username, String password);
 	
