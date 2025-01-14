@@ -412,5 +412,26 @@ public class CommunityController {
             throw new RuntimeException("첨부파일 로드 중 오류가 발생: " + filename, e);
         }
     }
+    
+    
+    @PostMapping("/community/{id}/like")
+    @ResponseBody
+    public ResponseEntity<String> likePost(@PathVariable("id") Long id) {
+        CommunityPost post = communityRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+        post.setLikes(post.getLikes() + 1);  // 좋아요 수 증가
+        communityRepository.save(post);
+        return ResponseEntity.ok("좋아요가 추가되었습니다.");
+    }
+    @PostMapping("/community/{id}/dislike")
+    @ResponseBody
+    public ResponseEntity<String> dislikePost(@PathVariable("id") Long id) {
+        CommunityPost post = communityRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+        post.setDislikes(post.getDislikes() + 1);  // 싫어요 수 증가
+        communityRepository.save(post);
+        return ResponseEntity.ok("싫어요가 추가되었습니다.");
+    }
+
    
 }
