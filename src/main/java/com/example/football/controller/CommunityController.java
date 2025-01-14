@@ -43,12 +43,9 @@ public class CommunityController {
     private final ReplyRepository replyRepository;
     private final StandingsService standingsService;
 
-    // C:/Project/Football-Project/uploads/ 내부에 images/, attachments/ 폴더가 생깁니다.
-    private final String uploadDir = "C:/Project/Football-Project/uploads/";
-    
-    // 예: DB에는 /uploads/images/filename.jpg 이렇게 들어가도록 상대 경로를 지정
+    private final String uploadDir = new File("uploads").getAbsolutePath() + File.separator;
     private final String relativePath = "/uploads/";
-    
+
     
 
     @Autowired
