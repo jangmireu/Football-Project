@@ -2,11 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>게시글 상세 보기</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&display=swap" rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&display=swap"
+	rel="stylesheet">
+	
 <style>
 /* 기본 스타일 */
 body {
-	font-family:'IBM Plex Sans KR', Arial, sans-serif;
+	font-family: 'IBM Plex Sans KR', Arial, sans-serif;
 	background-color: #f5f5f5;
 	margin: 0;
 	padding: 0;
@@ -203,14 +206,37 @@ h1 {
 
 .delete-button {
 	background-color: #d9534f;
-	
 }
 
 .delete-button:hover {
 	background-color: #c9302c;
 }
 </style>
+<script>
+    // 좋아요 요청
+    async function handleLikePost(postId) {
+        const response = await fetch(`/community/${postId}/like`, { method: 'POST' });
+        if (response.ok) {
+            const likesElement = document.getElementById('likes-count');
+            likesElement.textContent = parseInt(likesElement.textContent) + 1;
+        } else {
+            alert('좋아요 처리 중 오류가 발생했습니다.');
+        }
+    }
+
+    // 싫어요 요청
+    async function handleDislikePost(postId) {
+        const response = await fetch(`/community/${postId}/dislike`, { method: 'POST' });
+        if (response.ok) {
+            const dislikesElement = document.getElementById('dislikes-count');
+            dislikesElement.textContent = parseInt(dislikesElement.textContent) + 1;
+        } else {
+            alert('싫어요 처리 중 오류가 발생했습니다.');
+        }
+    }
+</script>
 </head>
+
 <body>
 	<!-- 메인 컨텐츠 -->
 	<div class="content">
@@ -227,10 +253,12 @@ h1 {
 			<!-- 첨부파일이 있을 경우 다운로드 링크 표시 -->
 			<span th:if="${post.attachmentPath != null}"> <strong>첨부파일:</strong>
 				<a th:href="@{${post.attachmentPath}}" download>다운로드</a>
-			</span>
+			</span> <span><strong>좋아요:</strong> <span id="likes-count"
+				th:text="${post.likes}">0</span></span> <span><strong>싫어요:</strong>
+				<span id="dislikes-count" th:text="${post.dislikes}">0</span></span>
 		</div>
-
-
+		
+		
 		<!-- 이미지 섹션 -->
 		<div class="image-wrapper" th:if="${post.imagePath != null}">
 			<img
@@ -243,7 +271,19 @@ h1 {
 		<div class="content-wrapper">
 			<p th:text="${post.content}">내용</p>
 		</div>
+		
+		
+	<div style="margin-top: 20px; text-align: center;">
+    <button th:onclick="'handleLikePost(' + ${post.id} + ')'" style="background: none; border: none; cursor: pointer;">
+        <img src="/like.png" alt="좋아요" style="width: 30px; height: 30px;">좋아요
+    </button>
+    <button th:onclick="'handleDislikePost(' + ${post.id} + ')'" style="background: none; border: none; cursor: pointer;">
+        <img src="/dislike.png" alt="싫어요" style="width: 30px; height: 30px;">싫어요
+    </button>
+</div>
 
+
+	
 		<!-- 답글 섹션 -->
 		<div class="reply-wrapper">
 			<h2>답글</h2>

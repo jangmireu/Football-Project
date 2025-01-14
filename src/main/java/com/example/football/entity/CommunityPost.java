@@ -24,6 +24,9 @@ public class CommunityPost {
     // 파일 경로 필드 추가(이미지,첨부파일)
     private String imagePath;
     private String attachmentPath;
+    
+    private int likes = 0;  // 좋아요 수
+    private int dislikes = 0;  // 싫어요 수
 
     // Getters and Setters
     public Long getId() {
@@ -89,6 +92,22 @@ public class CommunityPost {
 
     public void setAttachmentPath(String attachmentPath) {
         this.attachmentPath = attachmentPath;
+    }
+    //좋아요 싫어요 관련
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
     }
     
 }
