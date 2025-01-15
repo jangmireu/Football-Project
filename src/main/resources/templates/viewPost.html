@@ -241,7 +241,6 @@ h1 {
 		}
 	}
 
-	// ====== 여기서부터 추가된 부분 ======
 	// 답글 좋아요
 	async function handleLikeReply(replyId) {
 		try {
@@ -262,6 +261,24 @@ h1 {
 			alert('오류가 발생했습니다.');
 		}
 	}
+
+	// 드롭다운 메뉴 토글
+	document.addEventListener('DOMContentLoaded', function() {
+		const dropdownButton = document.getElementById('dropdownButton');
+		const dropdownMenu = document.getElementById('dropdownMenu');
+
+		// 버튼 클릭 시 드롭다운 메뉴 표시/숨김
+		dropdownButton.addEventListener('click', function(event) {
+			event.stopPropagation(); // 클릭 이벤트 전파 방지
+			const isDisplayed = dropdownMenu.style.display === 'block';
+			dropdownMenu.style.display = isDisplayed ? 'none' : 'block';
+		});
+
+		// 메뉴 외부 클릭 시 닫기
+		document.addEventListener('click', function() {
+			dropdownMenu.style.display = 'none';
+		});
+	});
 </script>
 </head>
 
@@ -301,10 +318,32 @@ h1 {
 				<img src="/dislike.png" alt="싫어요" style="width: 30px; height: 30px;">싫어요
 			</button>
 		</div>
-
+		
+		
 		<!-- 답글 섹션 -->
 		<div class="reply-wrapper">
-			<h2>답글</h2>
+			<div
+				style="margin-bottom: 20px; position: relative; display: inline-block;">
+				<!-- 드롭다운 버튼 -->
+				<button id="dropdownButton"
+					style="padding: 0; background: none; border: none; cursor: pointer;">
+					<img src="/sort.png" alt="정렬" style="width: 30px; height: 30px;">
+				</button>
+
+				<!-- 드롭다운 메뉴 -->
+				<div id="dropdownMenu"
+					style="display: none; position: absolute; background-color: white; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); min-width: 150px; z-index: 100;">
+					<a th:href="@{/community/{id}(id=${post.id}, sort='latest')}"
+						style="display: block; padding: 10px; text-decoration: none; font-weight: bold; color: #333;">
+						최신순 </a> <a th:href="@{/community/{id}(id=${post.id}, sort='likes')}"
+						style="display: block; padding: 10px; text-decoration: none; font-weight: bold; color: #333;">
+						좋아요순 </a> <a
+						th:href="@{/community/{id}(id=${post.id}, sort='oldest')}"
+						style="display: block; padding: 10px; text-decoration: none; font-weight: bold; color: #333;">
+						오래된순 </a>
+				</div>
+			</div>
+
 
 			<!-- 답글 목록 -->
 			<div class="reply-list">

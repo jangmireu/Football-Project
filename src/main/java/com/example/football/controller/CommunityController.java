@@ -183,15 +183,30 @@ public class CommunityController {
      * 게시글 상세 보기
      */
     @GetMapping("/community/{id}")
-    public String viewPost(@PathVariable("id") Long id, Model model) {
+    public String viewPost(@PathVariable("id") Long id,
+                           @RequestParam(value = "sort", defaultValue = "latest") String sort,
+                           Model model) {
         CommunityPost post = communityRepository.findById(id).orElse(null);
         if (post != null) {
             post.setViews(post.getViews() + 1);
             communityRepository.save(post);
             model.addAttribute("post", post);
 
-            List<Reply> replies = replyRepository.findByPostId(id);
+            // 답글 정렬 로직
+            List<Reply> replies;
+            switch (sort) {
+                case "likes":
+                    replies = replyRepository.findByPostIdOrderByLikesDesc(id);
+                    break;
+                case "oldest":
+                    replies = replyRepository.findByPostIdOrderByCreatedAtAsc(id);
+                    break;
+                default: // 최신순 (기본값)
+                    replies = replyRepository.findByPostIdOrderByCreatedAtDesc(id);
+                    break;
+            }
             model.addAttribute("replies", replies);
+            model.addAttribute("currentSort", sort); // 현재 정렬 기준 전달
         }
 
         List<Standing> standings = standingsService.getStandings();
@@ -484,4 +499,7 @@ public class CommunityController {
 
         return ResponseEntity.ok("답글 좋아요가 추가되었습니다.");
     }
+    
+    
+    
 }
