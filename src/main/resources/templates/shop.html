@@ -103,6 +103,16 @@ body {
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-between;
+
+}
+
+/* 자세히 보기 링크 스타일 */
+.details-link {
+    color: #007bff;
+    text-decoration: underline;
+    font-size: 16px;
+    margin-bottom: 20px; /* 구매하기 버튼과 충분히 간격 */
+    display: inline-block;
 }
 
 .card img {
@@ -194,6 +204,11 @@ body {
 				<img th:src="@{${item.imageUrl}}" alt="상품 이미지">
 				<h3 th:text="${item.name}">상품 이름</h3>
 				<p th:text="${item.price} + ' 포인트'">가격</p>
+				
+				
+				<a class="details-link" th:href="${item.link}" target="_blank" th:text="'자세히 보기'"></a>
+				
+				
 				<form th:action="@{/purchase}" method="post">
 					<input type="hidden" name="itemId" th:value="${item.id}" />
 					<button type="submit">구매하기</button>
