@@ -12,18 +12,21 @@ public class Reply {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 게시글과의 다대일 관계
     @ManyToOne
     @JoinColumn(name = "post_id")
-    private CommunityPost post; // 게시글과의 관계
+    private CommunityPost post;
 
-    private String author; // 작성자
-
-    private String content; // 답글 내용
+    private String author;      // 작성자
+    private String content;     // 답글 내용
 
     @CreationTimestamp
     private LocalDateTime createdAt; // 생성 시간
 
-    // Getters and Setters
+    // ============ (추가) 좋아요 수 ============
+    private int likes = 0;
+
+    // ============ Getters and Setters ============
     public Long getId() {
         return id;
     }
@@ -62,5 +65,14 @@ public class Reply {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    // (추가) likes 필드
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 }

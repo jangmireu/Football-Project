@@ -1,13 +1,13 @@
 package com.example.football.repository;
 
-import java.util.List;
-
+import com.example.football.entity.Reply;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.football.entity.Reply;
+import java.util.List;
 
 @Repository
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
-    List<Reply> findByPostId(Long postId);//게시글 ID로 답글 조회
+    // 특정 게시글의 답글 목록을 가져오는 메서드
+    List<Reply> findByPostId(Long postId);
 }

@@ -8,7 +8,6 @@ import com.example.football.repository.CommunityRepository;
 import com.example.football.repository.ReplyRepository;
 import com.example.football.service.CommunityService;
 import com.example.football.service.StandingsService;
-
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,18 +16,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.File;
-import java.io.IOException;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.Resource;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Controller
 public class CommunityController {
@@ -36,14 +34,11 @@ public class CommunityController {
     private final CommunityRepository communityRepository;
     private final ReplyRepository replyRepository;
     private final StandingsService standingsService;
-
-    // ▼ 추가된 필드: CommunityService
     private final CommunityService communityService;
 
     private final String uploadDir = new File("uploads").getAbsolutePath() + File.separator;
     private final String relativePath = "/uploads/";
 
-    // 생성자
     @Autowired
     public CommunityController(CommunityRepository communityRepository,
                                ReplyRepository replyRepository,
@@ -448,7 +443,7 @@ public class CommunityController {
     }
 
     /**
-     * 좋아요
+     * 게시글 좋아요
      */
     @PostMapping("/community/{id}/like")
     @ResponseBody
@@ -461,7 +456,7 @@ public class CommunityController {
     }
 
     /**
-     * 싫어요
+     * 게시글 싫어요
      */
     @PostMapping("/community/{id}/dislike")
     @ResponseBody
@@ -471,5 +466,22 @@ public class CommunityController {
         post.setDislikes(post.getDislikes() + 1);  // 싫어요 수 증가
         communityRepository.save(post);
         return ResponseEntity.ok("싫어요가 추가되었습니다.");
+    }
+
+    // === [답글 좋아요 추가] ===
+    /**
+     * 답글 좋아요
+     */
+    @PostMapping("/community/reply/{replyId}/like")
+    @ResponseBody
+    public ResponseEntity<String> likeReply(@PathVariable("replyId") Long replyId) {
+        Reply reply = replyRepository.findById(replyId)
+                .orElseThrow(() -> new IllegalArgumentException("답글을 찾을 수 없습니다."));
+
+        // likes 필드가 없다면, 엔티티 및 DB 컬럼을 추가해야 합니다.
+        reply.setLikes(reply.getLikes() + 1); // 좋아요 수 증가
+        replyRepository.save(reply);
+
+        return ResponseEntity.ok("답글 좋아요가 추가되었습니다.");
     }
 }

@@ -5,7 +5,7 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&display=swap"
 	rel="stylesheet">
-	
+
 <style>
 /* 기본 스타일 */
 body {
@@ -213,77 +213,95 @@ h1 {
 }
 </style>
 <script>
-    // 좋아요 요청
-    async function handleLikePost(postId) {
-        const response = await fetch(`/community/${postId}/like`, { method: 'POST' });
-        if (response.ok) {
-            const likesElement = document.getElementById('likes-count');
-            likesElement.textContent = parseInt(likesElement.textContent) + 1;
-        } else {
-            alert('좋아요 처리 중 오류가 발생했습니다.');
-        }
-    }
+	// 좋아요 요청
+	async function handleLikePost(postId) {
+		const response = await
+		fetch(`/community/${postId}/like`, {
+			method : 'POST'
+		});
+		if (response.ok) {
+			const likesElement = document.getElementById('likes-count');
+			likesElement.textContent = parseInt(likesElement.textContent) + 1;
+		} else {
+			alert('좋아요 처리 중 오류가 발생했습니다.');
+		}
+	}
 
-    // 싫어요 요청
-    async function handleDislikePost(postId) {
-        const response = await fetch(`/community/${postId}/dislike`, { method: 'POST' });
-        if (response.ok) {
-            const dislikesElement = document.getElementById('dislikes-count');
-            dislikesElement.textContent = parseInt(dislikesElement.textContent) + 1;
-        } else {
-            alert('싫어요 처리 중 오류가 발생했습니다.');
-        }
-    }
+	// 싫어요 요청
+	async function handleDislikePost(postId) {
+		const response = await
+		fetch(`/community/${postId}/dislike`, {
+			method : 'POST'
+		});
+		if (response.ok) {
+			const dislikesElement = document.getElementById('dislikes-count');
+			dislikesElement.textContent = parseInt(dislikesElement.textContent) + 1;
+		} else {
+			alert('싫어요 처리 중 오류가 발생했습니다.');
+		}
+	}
+
+	// ====== 여기서부터 추가된 부분 ======
+	// 답글 좋아요
+	async function handleLikeReply(replyId) {
+		try {
+			const response = await
+			fetch(`/community/reply/${replyId}/like`, {
+				method : 'POST'
+			});
+			if (response.ok) {
+				// 서버에서 좋아요가 잘 처리되었다면, 프론트에서 좋아요 수를 +1 해줍니다.
+				const likeCountSpan = document
+						.getElementById(`reply-likes-count-${replyId}`);
+				likeCountSpan.textContent = parseInt(likeCountSpan.textContent) + 1;
+			} else {
+				alert('답글 좋아요 처리 중 오류가 발생했습니다.');
+			}
+		} catch (error) {
+			console.error(error);
+			alert('오류가 발생했습니다.');
+		}
+	}
 </script>
 </head>
 
 <body>
-	<!-- 메인 컨텐츠 -->
 	<div class="content">
 		<h1 th:text="${post.title}">제목</h1>
 
-		<!-- 작성자, 조회수, 작성일 -->
 		<div class="meta-info">
 			<span><strong>작성자:</strong> <span th:text="${post.author}">작성자</span></span>
 			<span><strong>조회수:</strong> <span th:text="${post.views}">조회수</span></span>
 			<span><strong>작성일:</strong> <span
 				th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
-			</span>
-
-			<!-- 첨부파일이 있을 경우 다운로드 링크 표시 -->
-			<span th:if="${post.attachmentPath != null}"> <strong>첨부파일:</strong>
+			</span> <span th:if="${post.attachmentPath != null}"> <strong>첨부파일:</strong>
 				<a th:href="@{${post.attachmentPath}}" download>다운로드</a>
 			</span> <span><strong>좋아요:</strong> <span id="likes-count"
 				th:text="${post.likes}">0</span></span> <span><strong>싫어요:</strong>
 				<span id="dislikes-count" th:text="${post.dislikes}">0</span></span>
 		</div>
-		
-		
-		<!-- 이미지 섹션 -->
+
 		<div class="image-wrapper" th:if="${post.imagePath != null}">
 			<img
 				th:src="@{/uploads/images/} + ${post.imagePath.split('/images/')[1]}"
 				alt="첨부 이미지">
 		</div>
 
-
-		<!-- 내용 -->
 		<div class="content-wrapper">
 			<p th:text="${post.content}">내용</p>
 		</div>
-		
-		
-	<div style="margin-top: 20px; text-align: center;">
-    <button th:onclick="'handleLikePost(' + ${post.id} + ')'" style="background: none; border: none; cursor: pointer;">
-        <img src="/like.png" alt="좋아요" style="width: 30px; height: 30px;">좋아요
-    </button>
-    <button th:onclick="'handleDislikePost(' + ${post.id} + ')'" style="background: none; border: none; cursor: pointer;">
-        <img src="/dislike.png" alt="싫어요" style="width: 30px; height: 30px;">싫어요
-    </button>
-</div>
 
+		<div style="margin-top: 20px; text-align: center;">
+			<button th:onclick="'handleLikePost(' + ${post.id} + ')'"
+				style="background: none; border: none; cursor: pointer;">
+				<img src="/like.png" alt="좋아요" style="width: 30px; height: 30px;">좋아요
+			</button>
+			<button th:onclick="'handleDislikePost(' + ${post.id} + ')'"
+				style="background: none; border: none; cursor: pointer;">
+				<img src="/dislike.png" alt="싫어요" style="width: 30px; height: 30px;">싫어요
+			</button>
+		</div>
 
-	
 		<!-- 답글 섹션 -->
 		<div class="reply-wrapper">
 			<h2>답글</h2>
@@ -296,6 +314,20 @@ h1 {
 							th:text="${#temporals.format(reply.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
 					</p>
 					<p th:text="${reply.content}">답글 내용</p>
+
+					<!-- ====== 여기서부터 답글 좋아요 영역 ====== -->
+					<div style="margin-top: 15px; display: flex; align-items: center;">
+						<button type="button"
+							th:onclick="'handleLikeReply(' + ${reply.id} + ')'"
+							style="background: none; border: none; cursor: pointer;">
+							<img src="/like.png" alt="좋아요" style="width: 20px; height: 20px;">
+						</button>
+						<span style="margin-left: 10px;"
+							th:id="'reply-likes-count-' + ${reply.id}"
+							th:text="${reply.likes != null ? reply.likes : 0}"> 0 </span>
+					</div>
+
+					<!-- ===================================== -->
 
 					<!-- 수정 및 삭제 버튼 -->
 					<div th:if="${session.loggedInUsername == reply.author}"
@@ -310,9 +342,7 @@ h1 {
 						</form>
 					</div>
 				</div>
-
 			</div>
-
 
 			<!-- 답글 작성 폼 -->
 			<form th:action="@{/community/{id}/reply(id=${post.id})}"
@@ -328,7 +358,7 @@ h1 {
 			<button onclick="location.href='/community'">목록으로</button>
 			<div>
 				<a th:if="${session.loggedInUsername == post.author}"
-					th:href="@{/community/{id}/edit(id=${post.id})}">수정</a>
+					th:href="@{/community/{id}/edit(id=${post.id})}"> 수정 </a>
 				<form th:if="${session.loggedInUsername == post.author}"
 					th:action="@{/community/{id}/delete(id=${post.id})}" method="post"
 					style="display: inline;">
