@@ -21,7 +21,12 @@ public class CommunityPost {
     private int views = 0; // 기본값 0으로 설정
     private LocalDateTime createdAt = LocalDateTime.now();
     
+    // 파일 경로 필드 추가(이미지,첨부파일)
+    private String imagePath;
+    private String attachmentPath;
     
+    private int likes = 0;  // 좋아요 수
+    private int dislikes = 0;  // 싫어요 수
 
     // Getters and Setters
     public Long getId() {
@@ -71,4 +76,38 @@ public class CommunityPost {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+    
+    // 이미지,첨부파일 관련 코드
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public String getAttachmentPath() {
+        return attachmentPath;
+    }
+
+    public void setAttachmentPath(String attachmentPath) {
+        this.attachmentPath = attachmentPath;
+    }
+    //좋아요 싫어요 관련
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
+    }
+    
 }
