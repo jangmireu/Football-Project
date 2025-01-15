@@ -6,12 +6,12 @@ import com.example.football.entity.Standing;
 import com.example.football.entity.User;
 import com.example.football.repository.CommunityRepository;
 import com.example.football.repository.ReplyRepository;
+import com.example.football.service.CommunityService;
 import com.example.football.service.StandingsService;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
@@ -28,13 +27,8 @@ import org.springframework.core.io.Resource;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import org.springframework.http.MediaType;
-
 
 @Controller
 public class CommunityController {
@@ -43,40 +37,51 @@ public class CommunityController {
     private final ReplyRepository replyRepository;
     private final StandingsService standingsService;
 
+    // ▼ 추가된 필드: CommunityService
+    private final CommunityService communityService;
+
     private final String uploadDir = new File("uploads").getAbsolutePath() + File.separator;
     private final String relativePath = "/uploads/";
 
-    
-
+    // 생성자
     @Autowired
     public CommunityController(CommunityRepository communityRepository,
                                ReplyRepository replyRepository,
-                               StandingsService standingsService) {
+                               StandingsService standingsService,
+                               CommunityService communityService) {
         this.communityRepository = communityRepository;
         this.replyRepository = replyRepository;
         this.standingsService = standingsService;
+        this.communityService = communityService;
     }
 
-    // 커뮤니티 목록
+    /**
+     * 커뮤니티 목록 (정렬/페이징 적용)
+     */
     @GetMapping("/community")
     public String communityHome(@RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "10") int size,
+                                @RequestParam(value = "sort", required = false, defaultValue = "recent") String sort,
                                 Model model) {
-        PageRequest pageable = PageRequest.of(page, size);
-        Page<CommunityPost> postsPage = communityRepository.findAll(pageable);
+        // CommunityService를 통해 정렬 및 페이징된 게시글 가져오기
+        Page<CommunityPost> postsPage = communityService.getPosts(page, size, sort);
 
+        // 뷰로 전달할 데이터 추가
         model.addAttribute("posts", postsPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", postsPage.getTotalPages());
+        model.addAttribute("sort", sort);
 
         // standings 부분
         List<Standing> standings = standingsService.getStandings();
         model.addAttribute("standings", standings);
 
-        return "community";
+        return "community"; // community.html 템플릿 반환
     }
 
-    // 새 글 작성 폼
+    /**
+     * 새 글 작성 폼
+     */
     @GetMapping("/community/new")
     public String newPostForm(Model model, HttpSession session) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
@@ -87,7 +92,9 @@ public class CommunityController {
         return "newPost";
     }
 
-    // 새 글 등록 (이미지/첨부파일 업로드 처리)
+    /**
+     * 새 글 등록 (이미지/첨부파일 업로드 처리)
+     */
     @PostMapping("/community")
     public String createPost(@RequestParam("title") String title,
                              @RequestParam("content") String content,
@@ -112,23 +119,17 @@ public class CommunityController {
         // 업로드 폴더 생성(없으면) - images, attachments
         ensureUploadDirExists();
 
-        
         // -----------------------
         // 1) 이미지 업로드 처리
         // -----------------------
         if (image != null && !image.isEmpty()) {
             try {
-                // 파일명 중 특수문자 제거(간단 처리)
                 String originalFilename = image.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
-                // 겹치지 않도록 현재 시간 + 원본 파일명
                 String fileName = System.currentTimeMillis() + "_" + originalFilename;
-                
-                // 실제 저장될 절대 경로 (images 폴더)
+
                 String absoluteFilePath = uploadDir + "images/" + fileName;
-                
-                // 파일 업로드(저장)
                 image.transferTo(new File(absoluteFilePath));
-                
+
                 // DB에 저장할 때는 웹에서 접근 가능한 상대 경로로...
                 String imagePath = relativePath + "images/" + fileName;
                 post.setImagePath(imagePath);
@@ -147,13 +148,10 @@ public class CommunityController {
             try {
                 String originalFilename = attachment.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
                 String fileName = System.currentTimeMillis() + "_" + originalFilename;
-                
-                // 실제 저장될 절대 경로 (attachments 폴더)
+
                 String absoluteFilePath = uploadDir + "attachments/" + fileName;
-                
-                // 파일 업로드(저장)
                 attachment.transferTo(new File(absoluteFilePath));
-                
+
                 // DB에는 /uploads/attachments/파일명 식으로 저장
                 String attachmentPath = relativePath + "attachments/" + fileName;
                 post.setAttachmentPath(attachmentPath);
@@ -171,7 +169,9 @@ public class CommunityController {
         return "redirect:/community";
     }
 
-    // 업로드 폴더가 없으면 생성
+    /**
+     * 업로드 폴더가 없으면 생성
+     */
     private void ensureUploadDirExists() {
         File imageDir = new File(uploadDir + "images/");
         File attachmentDir = new File(uploadDir + "attachments/");
@@ -183,198 +183,231 @@ public class CommunityController {
             System.out.println("첨부파일 업로드 디렉토리가 생성되었습니다: " + attachmentDir.getAbsolutePath());
         }
     }
-    
- // 게시글 상세 보기
- 	@GetMapping("/community/{id}")
- 	public String viewPost(@PathVariable("id") Long id, Model model) {
- 		CommunityPost post = communityRepository.findById(id).orElse(null);
- 		if (post != null) {
- 			post.setViews(post.getViews() + 1);
- 			communityRepository.save(post);
- 			model.addAttribute("post", post);
 
- 			List<Reply> replies = replyRepository.findByPostId(id);
- 			model.addAttribute("replies", replies);
- 		}
+    /**
+     * 게시글 상세 보기
+     */
+    @GetMapping("/community/{id}")
+    public String viewPost(@PathVariable("id") Long id, Model model) {
+        CommunityPost post = communityRepository.findById(id).orElse(null);
+        if (post != null) {
+            post.setViews(post.getViews() + 1);
+            communityRepository.save(post);
+            model.addAttribute("post", post);
 
- 		List<Standing> standings = standingsService.getStandings();
- 		model.addAttribute("standings", standings);
+            List<Reply> replies = replyRepository.findByPostId(id);
+            model.addAttribute("replies", replies);
+        }
 
- 		return "viewPost";
- 	}
- 	
-	// 답글 추가
-	@PostMapping("/community/{id}/reply")
-	public String addReply(@PathVariable("id") Long id, @RequestParam("content") String content, HttpSession session,
-			RedirectAttributes redirectAttributes) {
-		String loggedInUsername = (String) session.getAttribute("loggedInUsername");
+        List<Standing> standings = standingsService.getStandings();
+        model.addAttribute("standings", standings);
 
-		if (loggedInUsername == null) {
-			redirectAttributes.addFlashAttribute("message", "로그인이 필요합니다.");
-			return "redirect:/login";
-		}
+        return "viewPost";
+    }
 
-		CommunityPost post = communityRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+    /**
+     * 답글 추가
+     */
+    @PostMapping("/community/{id}/reply")
+    public String addReply(@PathVariable("id") Long id,
+                           @RequestParam("content") String content,
+                           HttpSession session,
+                           RedirectAttributes redirectAttributes) {
+        String loggedInUsername = (String) session.getAttribute("loggedInUsername");
 
-		Reply reply = new Reply();
-		reply.setPost(post);
-		reply.setAuthor(loggedInUsername);
-		reply.setContent(content);
+        if (loggedInUsername == null) {
+            redirectAttributes.addFlashAttribute("message", "로그인이 필요합니다.");
+            return "redirect:/login";
+        }
 
-		replyRepository.save(reply);
+        CommunityPost post = communityRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-		return "redirect:/community/" + id;
-	}
+        Reply reply = new Reply();
+        reply.setPost(post);
+        reply.setAuthor(loggedInUsername);
+        reply.setContent(content);
 
-	// 게시글 수정 폼
-	@GetMapping("/community/{id}/edit")
-	public String editPostForm(@PathVariable("id") Long id, Model model, HttpSession session,
-			RedirectAttributes redirectAttributes) {
-		CommunityPost post = communityRepository.findById(id).orElse(null);
-		String loggedInUsername = (String) session.getAttribute("loggedInUsername");
+        replyRepository.save(reply);
 
-		if (post == null) {
-			redirectAttributes.addFlashAttribute("message", "게시글을 찾을 수 없습니다.");
-			return "redirect:/community";
-		}
+        return "redirect:/community/" + id;
+    }
 
-		if (!post.getAuthor().equals(loggedInUsername)) {
-			redirectAttributes.addFlashAttribute("message", "수정 권한이 없습니다.");
-			return "redirect:/community";
-		}
+    /**
+     * 게시글 수정 폼
+     */
+    @GetMapping("/community/{id}/edit")
+    public String editPostForm(@PathVariable("id") Long id,
+                               Model model,
+                               HttpSession session,
+                               RedirectAttributes redirectAttributes) {
+        CommunityPost post = communityRepository.findById(id).orElse(null);
+        String loggedInUsername = (String) session.getAttribute("loggedInUsername");
 
-		model.addAttribute("post", post);
-		return "editPost";
-	}
+        if (post == null) {
+            redirectAttributes.addFlashAttribute("message", "게시글을 찾을 수 없습니다.");
+            return "redirect:/community";
+        }
 
-	// 게시글 수정 처리
-	@PostMapping("/community/{id}/update")
-	public String updatePost(@PathVariable("id") Long id, @RequestParam("title") String title,
-			@RequestParam("content") String content, HttpSession session, RedirectAttributes redirectAttributes) {
-		CommunityPost post = communityRepository.findById(id).orElse(null);
-		String loggedInUsername = (String) session.getAttribute("loggedInUsername");
+        if (!post.getAuthor().equals(loggedInUsername)) {
+            redirectAttributes.addFlashAttribute("message", "수정 권한이 없습니다.");
+            return "redirect:/community";
+        }
 
-		if (post == null) {
-			redirectAttributes.addFlashAttribute("message", "게시글을 찾을 수 없습니다.");
-			return "redirect:/community";
-		}
+        model.addAttribute("post", post);
+        return "editPost";
+    }
 
-		if (!post.getAuthor().equals(loggedInUsername)) {
-			redirectAttributes.addFlashAttribute("message", "수정 권한이 없습니다.");
-			return "redirect:/community";
-		}
+    /**
+     * 게시글 수정 처리
+     */
+    @PostMapping("/community/{id}/update")
+    public String updatePost(@PathVariable("id") Long id,
+                             @RequestParam("title") String title,
+                             @RequestParam("content") String content,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+        CommunityPost post = communityRepository.findById(id).orElse(null);
+        String loggedInUsername = (String) session.getAttribute("loggedInUsername");
 
-		post.setTitle(title);
-		post.setContent(content);
-		communityRepository.save(post);
-		redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 수정되었습니다.");
-		return "redirect:/community/" + id;
-	}
+        if (post == null) {
+            redirectAttributes.addFlashAttribute("message", "게시글을 찾을 수 없습니다.");
+            return "redirect:/community";
+        }
 
-	// 게시글 삭제
-	@PostMapping("/community/{id}/delete")
-	public String deletePost(@PathVariable("id") Long id, HttpSession session, RedirectAttributes redirectAttributes) {
-		String loggedInUsername = (String) session.getAttribute("loggedInUsername");
+        if (!post.getAuthor().equals(loggedInUsername)) {
+            redirectAttributes.addFlashAttribute("message", "수정 권한이 없습니다.");
+            return "redirect:/community";
+        }
 
-		CommunityPost post = communityRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+        post.setTitle(title);
+        post.setContent(content);
+        communityRepository.save(post);
+        redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 수정되었습니다.");
+        return "redirect:/community/" + id;
+    }
 
-		if (!post.getAuthor().equals(loggedInUsername)) {
-			redirectAttributes.addFlashAttribute("message", "삭제 권한이 없습니다.");
-			return "redirect:/community";
-		}
+    /**
+     * 게시글 삭제
+     */
+    @PostMapping("/community/{id}/delete")
+    public String deletePost(@PathVariable("id") Long id,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+        String loggedInUsername = (String) session.getAttribute("loggedInUsername");
 
-		communityRepository.delete(post);
-		redirectAttributes.addFlashAttribute("message", "게시글이 삭제되었습니다.");
-		return "redirect:/community";
-	}
+        CommunityPost post = communityRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-	// 답글 수정 폼
-	@GetMapping("/community/{postId}/reply/{replyId}/edit")
-	public String editReplyForm(@PathVariable("postId") Long postId, @PathVariable("replyId") Long replyId,
-			HttpSession session, Model model, RedirectAttributes redirectAttributes) {
-		String loggedInUsername = (String) session.getAttribute("loggedInUsername");
+        if (!post.getAuthor().equals(loggedInUsername)) {
+            redirectAttributes.addFlashAttribute("message", "삭제 권한이 없습니다.");
+            return "redirect:/community";
+        }
 
-		if (loggedInUsername == null) {
-			redirectAttributes.addFlashAttribute("message", "로그인이 필요합니다.");
-			return "redirect:/login";
-		}
+        communityRepository.delete(post);
+        redirectAttributes.addFlashAttribute("message", "게시글이 삭제되었습니다.");
+        return "redirect:/community";
+    }
 
-		Reply reply = replyRepository.findById(replyId)
-				.orElseThrow(() -> new IllegalArgumentException("답글을 찾을 수 없습니다."));
+    /**
+     * 답글 수정 폼
+     */
+    @GetMapping("/community/{postId}/reply/{replyId}/edit")
+    public String editReplyForm(@PathVariable("postId") Long postId,
+                                @PathVariable("replyId") Long replyId,
+                                HttpSession session,
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
+        String loggedInUsername = (String) session.getAttribute("loggedInUsername");
 
-		if (!reply.getAuthor().equals(loggedInUsername)) {
-			redirectAttributes.addFlashAttribute("message", "수정 권한이 없습니다.");
-			return "redirect:/community/" + postId;
-		}
+        if (loggedInUsername == null) {
+            redirectAttributes.addFlashAttribute("message", "로그인이 필요합니다.");
+            return "redirect:/login";
+        }
 
-		model.addAttribute("reply", reply);
-		model.addAttribute("postId", postId);
-		return "editReply";
-	}
+        Reply reply = replyRepository.findById(replyId)
+                .orElseThrow(() -> new IllegalArgumentException("답글을 찾을 수 없습니다."));
 
-	// 답글 수정 처리
-	@PostMapping("/community/{postId}/reply/{replyId}/update")
-	public String updateReply(@PathVariable("postId") Long postId, @PathVariable("replyId") Long replyId,
-			@RequestParam("content") String content, HttpSession session, RedirectAttributes redirectAttributes) {
-		String loggedInUsername = (String) session.getAttribute("loggedInUsername");
+        if (!reply.getAuthor().equals(loggedInUsername)) {
+            redirectAttributes.addFlashAttribute("message", "수정 권한이 없습니다.");
+            return "redirect:/community/" + postId;
+        }
 
-		if (loggedInUsername == null) {
-			redirectAttributes.addFlashAttribute("message", "로그인이 필요합니다.");
-			return "redirect:/login";
-		}
+        model.addAttribute("reply", reply);
+        model.addAttribute("postId", postId);
+        return "editReply";
+    }
 
-		Reply reply = replyRepository.findById(replyId)
-				.orElseThrow(() -> new IllegalArgumentException("답글을 찾을 수 없습니다."));
+    /**
+     * 답글 수정 처리
+     */
+    @PostMapping("/community/{postId}/reply/{replyId}/update")
+    public String updateReply(@PathVariable("postId") Long postId,
+                              @PathVariable("replyId") Long replyId,
+                              @RequestParam("content") String content,
+                              HttpSession session,
+                              RedirectAttributes redirectAttributes) {
+        String loggedInUsername = (String) session.getAttribute("loggedInUsername");
 
-		if (!reply.getAuthor().equals(loggedInUsername)) {
-			redirectAttributes.addFlashAttribute("message", "수정 권한이 없습니다.");
-			return "redirect:/community/" + postId;
-		}
+        if (loggedInUsername == null) {
+            redirectAttributes.addFlashAttribute("message", "로그인이 필요합니다.");
+            return "redirect:/login";
+        }
 
-		reply.setContent(content);
-		replyRepository.save(reply);
+        Reply reply = replyRepository.findById(replyId)
+                .orElseThrow(() -> new IllegalArgumentException("답글을 찾을 수 없습니다."));
 
-		redirectAttributes.addFlashAttribute("message", "답글이 수정되었습니다.");
-		return "redirect:/community/" + postId;
-	}
+        if (!reply.getAuthor().equals(loggedInUsername)) {
+            redirectAttributes.addFlashAttribute("message", "수정 권한이 없습니다.");
+            return "redirect:/community/" + postId;
+        }
 
-	// 답글 삭제
-	@PostMapping("/community/{postId}/reply/{replyId}/delete")
-	public String deleteReply(@PathVariable("postId") Long postId, @PathVariable("replyId") Long replyId,
-			HttpSession session, RedirectAttributes redirectAttributes) {
-		String loggedInUsername = (String) session.getAttribute("loggedInUsername");
+        reply.setContent(content);
+        replyRepository.save(reply);
 
-		if (loggedInUsername == null) {
-			redirectAttributes.addFlashAttribute("message", "로그인이 필요합니다.");
-			return "redirect:/login";
-		}
+        redirectAttributes.addFlashAttribute("message", "답글이 수정되었습니다.");
+        return "redirect:/community/" + postId;
+    }
 
-		Reply reply = replyRepository.findById(replyId)
-				.orElseThrow(() -> new IllegalArgumentException("답글을 찾을 수 없습니다."));
+    /**
+     * 답글 삭제
+     */
+    @PostMapping("/community/{postId}/reply/{replyId}/delete")
+    public String deleteReply(@PathVariable("postId") Long postId,
+                              @PathVariable("replyId") Long replyId,
+                              HttpSession session,
+                              RedirectAttributes redirectAttributes) {
+        String loggedInUsername = (String) session.getAttribute("loggedInUsername");
 
-		// 작성자 확인
-		if (!reply.getAuthor().equals(loggedInUsername)) {
-			redirectAttributes.addFlashAttribute("message", "삭제 권한이 없습니다.");
-			return "redirect:/community/" + postId;
-		}
+        if (loggedInUsername == null) {
+            redirectAttributes.addFlashAttribute("message", "로그인이 필요합니다.");
+            return "redirect:/login";
+        }
 
-		replyRepository.delete(reply); // 답글 삭제
-		redirectAttributes.addFlashAttribute("message", "답글이 삭제되었습니다.");
-		return "redirect:/community/" + postId;
-		}
+        Reply reply = replyRepository.findById(replyId)
+                .orElseThrow(() -> new IllegalArgumentException("답글을 찾을 수 없습니다."));
 
-	 
+        // 작성자 확인
+        if (!reply.getAuthor().equals(loggedInUsername)) {
+            redirectAttributes.addFlashAttribute("message", "삭제 권한이 없습니다.");
+            return "redirect:/community/" + postId;
+        }
+
+        replyRepository.delete(reply); // 답글 삭제
+        redirectAttributes.addFlashAttribute("message", "답글이 삭제되었습니다.");
+        return "redirect:/community/" + postId;
+    }
+
+    /**
+     * 이미지 파일 서빙
+     */
     @GetMapping("/uploads/images/{filename}")
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
         try {
-            // 실제 파일 경로
             String filePath = uploadDir + "images/" + filename;
             Resource file = new UrlResource("file:" + filePath);
 
             if (file.exists() && file.isReadable()) {
-                // 성공적으로 Resource를 찾았다면 그대로 반환
                 return ResponseEntity.ok().body(file);
             } else {
                 throw new RuntimeException("파일을 찾을 수 없습니다: " + filename);
@@ -383,7 +416,10 @@ public class CommunityController {
             throw new RuntimeException("파일 로드 중 오류가 발생: " + filename, e);
         }
     }
-    // 첨부파일 다운로드
+
+    /**
+     * 첨부파일 다운로드
+     */
     @GetMapping("/uploads/attachments/{filename}")
     public ResponseEntity<Resource> downloadAttachment(@PathVariable String filename) {
         try {
@@ -391,20 +427,18 @@ public class CommunityController {
             Resource resource = new UrlResource("file:" + filePath);
 
             if (resource.exists() && resource.isReadable()) {
-
-                // 1) OS로부터 MIME 타입 추론
+                // OS로부터 MIME 타입 추론
                 String mimeType = Files.probeContentType(Paths.get(filePath));
-                // 2) 못 찾으면 기본값 지정
                 if (mimeType == null) {
+                    // 못 찾으면 기본값 지정
                     mimeType = "application/octet-stream";
                 }
 
                 return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(mimeType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION,
-                            "attachment; filename=\"" + resource.getFilename() + "\"")
-                    .body(resource);
-
+                        .contentType(MediaType.parseMediaType(mimeType))
+                        .header(HttpHeaders.CONTENT_DISPOSITION,
+                                "attachment; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
             } else {
                 throw new RuntimeException("첨부파일을 찾을 수 없습니다: " + filename);
             }
@@ -412,8 +446,10 @@ public class CommunityController {
             throw new RuntimeException("첨부파일 로드 중 오류가 발생: " + filename, e);
         }
     }
-    
-    
+
+    /**
+     * 좋아요
+     */
     @PostMapping("/community/{id}/like")
     @ResponseBody
     public ResponseEntity<String> likePost(@PathVariable("id") Long id) {
@@ -423,6 +459,10 @@ public class CommunityController {
         communityRepository.save(post);
         return ResponseEntity.ok("좋아요가 추가되었습니다.");
     }
+
+    /**
+     * 싫어요
+     */
     @PostMapping("/community/{id}/dislike")
     @ResponseBody
     public ResponseEntity<String> dislikePost(@PathVariable("id") Long id) {
@@ -432,6 +472,4 @@ public class CommunityController {
         communityRepository.save(post);
         return ResponseEntity.ok("싫어요가 추가되었습니다.");
     }
-
-   
 }
