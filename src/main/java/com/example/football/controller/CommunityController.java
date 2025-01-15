@@ -185,6 +185,7 @@ public class CommunityController {
     @GetMapping("/community/{id}")
     public String viewPost(@PathVariable("id") Long id,
                            @RequestParam(value = "sort", defaultValue = "latest") String sort,
+                           HttpSession session,
                            Model model) {
         CommunityPost post = communityRepository.findById(id).orElse(null);
         if (post != null) {
@@ -207,6 +208,14 @@ public class CommunityController {
             }
             model.addAttribute("replies", replies);
             model.addAttribute("currentSort", sort); // 현재 정렬 기준 전달
+        }
+
+        // 세션에서 로그인된 사용자 ID 가져오기
+        Object loggedInUserId = session.getAttribute("loggedInUserId");
+        if (loggedInUserId != null) {
+            model.addAttribute("userId", loggedInUserId); // 로그인된 사용자 ID 전달
+        } else {
+            model.addAttribute("userId", null); // 로그인되지 않은 경우 null 전달
         }
 
         List<Standing> standings = standingsService.getStandings();
@@ -489,17 +498,20 @@ public class CommunityController {
      */
     @PostMapping("/community/reply/{replyId}/like")
     @ResponseBody
-    public ResponseEntity<String> likeReply(@PathVariable("replyId") Long replyId) {
-        Reply reply = replyRepository.findById(replyId)
-                .orElseThrow(() -> new IllegalArgumentException("답글을 찾을 수 없습니다."));
+    public ResponseEntity<String> toggleReplyLike(@PathVariable("replyId") Long replyId,
+                                                  @RequestParam("userId") Long userId) {
+        if (userId == null) {
+            return ResponseEntity.badRequest().body("로그인 상태가 아닙니다.");
+        }
 
-        // likes 필드가 없다면, 엔티티 및 DB 컬럼을 추가해야 합니다.
-        reply.setLikes(reply.getLikes() + 1); // 좋아요 수 증가
-        replyRepository.save(reply);
+        boolean liked = communityService.toggleReplyLike(replyId, userId);
 
-        return ResponseEntity.ok("답글 좋아요가 추가되었습니다.");
+        if (liked) {
+            return ResponseEntity.ok("답글 좋아요가 추가되었습니다.");
+        } else {
+            return ResponseEntity.ok("답글 좋아요가 취소되었습니다.");
+        }
     }
-    
-    
+
     
 }
