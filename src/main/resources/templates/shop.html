@@ -299,6 +299,10 @@ body {
     <span th:if="${session.loggedInUser != null}" th:text="${session.loggedInUser?.points ?: 0} + '점'"></span>
     <span th:if="${session.loggedInUser == null}">0점</span>
 </p>
+
+<p style="color: red; font-size: 14px; margin-top: 10px;">
+            ※회원가입 진행 시 설정한 주소로 배송됩니다. 구매 전 마이페이지에서 주소를 확인해주세요.※
+        </p>
 		</div>
 		<p th:if="${message != null}" th:text="${message}"
 			style="color: green;"></p>

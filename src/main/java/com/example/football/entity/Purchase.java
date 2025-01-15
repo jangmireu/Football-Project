@@ -13,15 +13,17 @@ public class Purchase {
     private String itemName;
     private String size;
     private String username;
+    private String address; // 추가된 필드
 
     private LocalDateTime purchaseDate;
 
     public Purchase() {}
 
-    public Purchase(String itemName, String size, String username, LocalDateTime purchaseDate) {
+    public Purchase(String itemName, String size, String username, String address, LocalDateTime purchaseDate) {
         this.itemName = itemName;
         this.size = size;
         this.username = username;
+        this.address = address;
         this.purchaseDate = purchaseDate;
     }
 
@@ -60,5 +62,12 @@ public class Purchase {
 
     public void setPurchaseDate(LocalDateTime purchaseDate) {
         this.purchaseDate = purchaseDate;
+    }
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

@@ -59,7 +59,8 @@ public class ShopController {
             Purchase purchase = new Purchase(
                 item.getName(), 
                 size, 
-                loggedInUser.getUsername(), 
+                loggedInUser.getUsername(),
+                loggedInUser.getAddress(), // 주소 추가
                 LocalDateTime.now()
             );
             purchaseRepository.save(purchase);
