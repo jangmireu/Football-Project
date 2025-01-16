@@ -76,6 +76,7 @@ public class CommunityController {
         return "community"; // community.html 템플릿 반환
     }
 
+
     /**
      * 새 글 작성 폼
      */
