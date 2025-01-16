@@ -26,7 +26,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class CommunityController {
@@ -322,7 +324,10 @@ public class CommunityController {
             redirectAttributes.addFlashAttribute("message", "삭제 권한이 없습니다.");
             return "redirect:/community";
         }
-
+        
+     // 게시글 삭제 (연관된 답글도 자동 삭제됨)
+        communityRepository.delete(post);
+        
         communityRepository.delete(post);
         redirectAttributes.addFlashAttribute("message", "게시글이 삭제되었습니다.");
         return "redirect:/community";
@@ -467,20 +472,39 @@ public class CommunityController {
     }
 
     /**
-     * 게시글 좋아요
+     * 게시글 좋아요 (토글 방식)
      */
     @PostMapping("/community/{id}/like")
     @ResponseBody
-    public ResponseEntity<String> likePost(@PathVariable("id") Long id) {
+    public ResponseEntity<Map<String, Object>> likePost(@PathVariable("id") Long id,
+                                                       HttpSession session) {
+        // 세션에서 사용자 정보 확인
+        Long userId = (Long) session.getAttribute("loggedInUserId");
+        if (userId == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "로그인 상태가 아닙니다.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // 좋아요 토글 로직 호출
+        boolean liked = communityService.togglePostLike(id, userId);
+
+        // 좋아요 상태와 최신 좋아요 수 가져오기
         CommunityPost post = communityRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
-        post.setLikes(post.getLikes() + 1);  // 좋아요 수 증가
-        communityRepository.save(post);
-        return ResponseEntity.ok("좋아요가 추가되었습니다.");
+            .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", liked ? "좋아요가 추가되었습니다." : "좋아요가 취소되었습니다.");
+        response.put("likes", post.getLikes()); // 최신 좋아요 수 반환
+
+        return ResponseEntity.ok(response);
     }
+
 
     /**
      * 게시글 싫어요
+     * (현재는 단순 증가 로직이므로, 동일하게 토글을 적용하시려면 이와 같은 방식으로 PostDislike 엔티티를 추가하거나
+     *  별도의 로직 구현이 필요합니다.)
      */
     @PostMapping("/community/{id}/dislike")
     @ResponseBody
@@ -512,6 +536,4 @@ public class CommunityController {
             return ResponseEntity.ok("답글 좋아요가 취소되었습니다.");
         }
     }
-
-    
 }

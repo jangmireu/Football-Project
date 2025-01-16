@@ -2,7 +2,6 @@ package com.example.football.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,7 +13,7 @@ public class Reply {
 
     // 게시글과의 다대일 관계
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable = false)
     private CommunityPost post;
 
     private String author;      // 작성자
@@ -23,10 +22,9 @@ public class Reply {
     @CreationTimestamp
     private LocalDateTime createdAt; // 생성 시간
 
-    // ============ (추가) 좋아요 수 ============
-    private int likes = 0;
+    private int likes = 0;  // 좋아요 수
 
-    // ============ Getters and Setters ============
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -67,7 +65,6 @@ public class Reply {
         this.createdAt = createdAt;
     }
 
-    // (추가) likes 필드
     public int getLikes() {
         return likes;
     }
