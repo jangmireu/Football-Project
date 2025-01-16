@@ -339,12 +339,18 @@ td {
 				<button class="common-button"
 					onclick="location.href='/community/new'">새 글 작성</button>
 				<div class="dropdown">
-					<button class="dropbtn">정렬</button>
-					<div class="dropdown-content">
-						<a href="/community?sort=likes">좋아요순</a> <a
-							href="/community?sort=views">조회수순</a> 
-					</div>
-				</div>
+    <button class="dropbtn">정렬</button>
+    <div class="dropdown-content">
+        <a th:href="@{/community(sort='likes', page=${currentPage}, size=10)}" 
+           th:classappend="${sort == 'likes'} ? 'active'">좋아요순</a>
+        <a th:href="@{/community(sort='views', page=${currentPage}, size=10)}" 
+           th:classappend="${sort == 'views'} ? 'active'">조회수순</a>
+        <a th:href="@{/community(sort='recent', page=${currentPage}, size=10)}" 
+           th:classappend="${sort == 'recent'} ? 'active'">최신순</a>
+    </div>
+</div>
+				
+				
 			</div>
 
 			<!-- 게시글 목록 -->
@@ -389,15 +395,16 @@ td {
 
 
 			<!-- 페이징 처리 -->
-			<div class="pagination" th:if="${totalPages > 1}">
-				<a th:href="@{/community(page=${currentPage - 1}, size=10)}"
-					th:if="${currentPage > 0}">이전</a> <span
-					th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-					th:classappend="${i == currentPage} ? 'active'"> <a
-					th:href="@{/community(page=${i}, size=10)}" th:text="${i + 1}">1</a>
-				</span> <a th:href="@{/community(page=${currentPage + 1}, size=10)}"
-					th:if="${currentPage < totalPages - 1}">다음</a>
-			</div>
+<div class="pagination" th:if="${totalPages > 1}">
+    <a th:href="@{/community(sort=${sort}, page=${currentPage - 1}, size=10)}"
+       th:if="${currentPage > 0}">이전</a>
+    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+          th:classappend="${i == currentPage} ? 'active'">
+        <a th:href="@{/community(sort=${sort}, page=${i}, size=10)}" th:text="${i + 1}"></a>
+    </span>
+    <a th:href="@{/community(sort=${sort}, page=${currentPage + 1}, size=10)}"
+       th:if="${currentPage < totalPages - 1}">다음</a>
+</div>
 		</div>
 	</div>
 </body>
