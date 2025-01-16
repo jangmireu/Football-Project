@@ -5,7 +5,7 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&display=swap"
 	rel="stylesheet">
-	
+
 <style>
 /* 기본 스타일 */
 body {
@@ -213,80 +213,188 @@ h1 {
 }
 </style>
 <script>
-    // 좋아요 요청
-    async function handleLikePost(postId) {
-        const response = await fetch(`/community/${postId}/like`, { method: 'POST' });
-        if (response.ok) {
-            const likesElement = document.getElementById('likes-count');
-            likesElement.textContent = parseInt(likesElement.textContent) + 1;
-        } else {
-            alert('좋아요 처리 중 오류가 발생했습니다.');
-        }
-    }
+	// 좋아요 요청 (JSON 응답 가정)
+	async function handleLikePost(postId) {
+		try {
+			const response = await
+			fetch(`/community/${postId}/like`, {
+				method : 'POST'
+			});
 
-    // 싫어요 요청
-    async function handleDislikePost(postId) {
-        const response = await fetch(`/community/${postId}/dislike`, { method: 'POST' });
+			if (response.ok) {
+				// 서버에서 JSON을 받는다. 예: { message: "좋아요가 추가되었습니다.", likes: 10 }
+				const data = await
+				response.json();
+
+				// 좋아요 숫자를 표시하는 요소
+				const likesElement = document.getElementById("likes-count");
+
+				// 좋아요 숫자 업데이트
+				if (likesElement) {
+					likesElement.textContent = data.likes;
+				}
+
+				// 메시지 표시
+				alert(data.message);
+
+			} else {
+				// 응답이 2xx가 아닐 때
+				const errorText = await
+				response.text();
+				alert(`좋아요 처리 중 오류가 발생했습니다: ${errorText}`);
+			}
+		} catch (error) {
+			console.error("Fetch Exception:", error);
+			alert("서버와 통신 중 오류가 발생했습니다.");
+		}
+	}
+
+	// 싫어요 요청
+	async function handleDislikePost(postId) {
+    try {
+        const response = await fetch(`/community/${postId}/dislike`, {
+            method: 'POST'
+        });
+
         if (response.ok) {
-            const dislikesElement = document.getElementById('dislikes-count');
-            dislikesElement.textContent = parseInt(dislikesElement.textContent) + 1;
+            const data = await response.json();
+
+            // 싫어요 숫자 업데이트
+            const dislikesElement = document.getElementById("dislikes-count");
+            if (dislikesElement) {
+                dislikesElement.textContent = data.dislikes;
+            }
+
+            alert(data.message);
         } else {
-            alert('싫어요 처리 중 오류가 발생했습니다.');
+            const errorText = await response.text();
+            alert(`싫어요 처리 중 오류가 발생했습니다: ${errorText}`);
         }
+    } catch (error) {
+        console.error("Fetch Exception:", error);
+        alert("서버와 통신 중 오류가 발생했습니다.");
     }
+}
+
+	async function handleLikeReply(replyId, userId) {
+		if (!userId) {
+			alert("로그인 후 좋아요를 누를 수 있습니다."); // 로그인되지 않은 경우 처리
+			return;
+		}
+
+		try {
+			const response = await
+			fetch(`/community/reply/${replyId}/like?userId=${userId}`, {
+				method : 'POST',
+			});
+			const result = await
+			response.text();
+			const likeCountSpan = document
+					.getElementById(`reply-likes-count-${replyId}`);
+			let currentLikes = parseInt(likeCountSpan.textContent);
+
+			if (response.ok) {
+				if (result === "답글 좋아요가 추가되었습니다.") {
+					likeCountSpan.textContent = currentLikes + 1;
+				} else if (result === "답글 좋아요가 취소되었습니다.") {
+					likeCountSpan.textContent = currentLikes - 1;
+				}
+			} else {
+				alert("좋아요 처리 중 오류가 발생했습니다.");
+			}
+		} catch (error) {
+			console.error(error);
+			alert("오류가 발생했습니다.");
+		}
+	}
+
+	// 드롭다운 메뉴 토글
+	document.addEventListener('DOMContentLoaded', function() {
+		const dropdownButton = document.getElementById('dropdownButton');
+		const dropdownMenu = document.getElementById('dropdownMenu');
+
+		// 버튼 클릭 시 드롭다운 메뉴 표시/숨김
+		dropdownButton.addEventListener('click', function(event) {
+			event.stopPropagation(); // 클릭 이벤트 전파 방지
+			const isDisplayed = dropdownMenu.style.display === 'block';
+			dropdownMenu.style.display = isDisplayed ? 'none' : 'block';
+		});
+
+		// 메뉴 외부 클릭 시 닫기
+		document.addEventListener('click', function() {
+			dropdownMenu.style.display = 'none';
+		});
+	});
 </script>
 </head>
 
 <body>
-	<!-- 메인 컨텐츠 -->
 	<div class="content">
 		<h1 th:text="${post.title}">제목</h1>
 
-		<!-- 작성자, 조회수, 작성일 -->
 		<div class="meta-info">
 			<span><strong>작성자:</strong> <span th:text="${post.author}">작성자</span></span>
 			<span><strong>조회수:</strong> <span th:text="${post.views}">조회수</span></span>
 			<span><strong>작성일:</strong> <span
 				th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
-			</span>
-
-			<!-- 첨부파일이 있을 경우 다운로드 링크 표시 -->
-			<span th:if="${post.attachmentPath != null}"> <strong>첨부파일:</strong>
+			</span> <span th:if="${post.attachmentPath != null}"> <strong>첨부파일:</strong>
 				<a th:href="@{${post.attachmentPath}}" download>다운로드</a>
 			</span> <span><strong>좋아요:</strong> <span id="likes-count"
-				th:text="${post.likes}">0</span></span> <span><strong>싫어요:</strong>
-				<span id="dislikes-count" th:text="${post.dislikes}">0</span></span>
+				th:text="${post.likes}">0</span></span> 
+				 <span><strong>싫어요:</strong> 
+        <span id="dislikes-count" th:text="${post.dislikes}">0</span>
+    </span>
 		</div>
-		
-		
-		<!-- 이미지 섹션 -->
+
 		<div class="image-wrapper" th:if="${post.imagePath != null}">
 			<img
 				th:src="@{/uploads/images/} + ${post.imagePath.split('/images/')[1]}"
 				alt="첨부 이미지">
 		</div>
 
-
-		<!-- 내용 -->
 		<div class="content-wrapper">
 			<p th:text="${post.content}">내용</p>
 		</div>
-		
-		
-	<div style="margin-top: 20px; text-align: center;">
-    <button th:onclick="'handleLikePost(' + ${post.id} + ')'" style="background: none; border: none; cursor: pointer;">
-        <img src="/like.png" alt="좋아요" style="width: 30px; height: 30px;">좋아요
-    </button>
-    <button th:onclick="'handleDislikePost(' + ${post.id} + ')'" style="background: none; border: none; cursor: pointer;">
+
+		<div style="margin-top: 20px; text-align: center;">
+			<span id="likes-count-${post.id}"> <!-- 좋아요 버튼 -->
+				<button th:onclick="'handleLikePost(' + ${post.id} + ')'"
+					style="background: none; border: none; cursor: pointer;">
+					<img src="/like.png" alt="좋아요" style="width: 30px; height: 30px;">좋아요
+				</button> 				
+				 <!-- 싫어요 버튼 -->
+    <button th:onclick="'handleDislikePost(' + ${post.id} + ')'" 
+            style="background: none; border: none; cursor: pointer;">
         <img src="/dislike.png" alt="싫어요" style="width: 30px; height: 30px;">싫어요
     </button>
-</div>
+		</div>
 
 
-	
+
 		<!-- 답글 섹션 -->
 		<div class="reply-wrapper">
-			<h2>답글</h2>
+			<div
+				style="margin-bottom: 20px; position: relative; display: inline-block;">
+				<!-- 드롭다운 버튼 -->
+				<button id="dropdownButton"
+					style="padding: 0; background: none; border: none; cursor: pointer;">
+					<img src="/sort.png" alt="정렬" style="width: 30px; height: 30px;">
+				</button>
+
+				<!-- 드롭다운 메뉴 -->
+				<div id="dropdownMenu"
+					style="display: none; position: absolute; background-color: white; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); min-width: 150px; z-index: 100;">
+					<a th:href="@{/community/{id}(id=${post.id}, sort='latest')}"
+						style="display: block; padding: 10px; text-decoration: none; font-weight: bold; color: #333;">
+						최신순 </a> <a th:href="@{/community/{id}(id=${post.id}, sort='likes')}"
+						style="display: block; padding: 10px; text-decoration: none; font-weight: bold; color: #333;">
+						좋아요순 </a> <a
+						th:href="@{/community/{id}(id=${post.id}, sort='oldest')}"
+						style="display: block; padding: 10px; text-decoration: none; font-weight: bold; color: #333;">
+						오래된순 </a>
+				</div>
+			</div>
+
 
 			<!-- 답글 목록 -->
 			<div class="reply-list">
@@ -296,6 +404,22 @@ h1 {
 							th:text="${#temporals.format(reply.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
 					</p>
 					<p th:text="${reply.content}">답글 내용</p>
+
+					<!-- ====== 여기서부터 답글 좋아요 영역 ====== -->
+					<div style="margin-top: 15px; display: flex; align-items: center;">
+						<button type="button"
+							th:onclick="'handleLikeReply(' + ${reply.id} + ', ' + (${userId} != null ? ${userId} : 0) + ')'"
+							style="background: none; border: none; cursor: pointer;">
+							<img src="/like.png" alt="좋아요" style="width: 20px; height: 20px;">
+						</button>
+						<span style="margin-left: 10px;"
+							th:id="'reply-likes-count-' + ${reply.id}"
+							th:text="${reply.likes != null ? reply.likes : 0}">0</span>
+					</div>
+
+
+
+					<!-- ===================================== -->
 
 					<!-- 수정 및 삭제 버튼 -->
 					<div th:if="${session.loggedInUsername == reply.author}"
@@ -310,9 +434,7 @@ h1 {
 						</form>
 					</div>
 				</div>
-
 			</div>
-
 
 			<!-- 답글 작성 폼 -->
 			<form th:action="@{/community/{id}/reply(id=${post.id})}"
@@ -328,7 +450,7 @@ h1 {
 			<button onclick="location.href='/community'">목록으로</button>
 			<div>
 				<a th:if="${session.loggedInUsername == post.author}"
-					th:href="@{/community/{id}/edit(id=${post.id})}">수정</a>
+					th:href="@{/community/{id}/edit(id=${post.id})}"> 수정 </a>
 				<form th:if="${session.loggedInUsername == post.author}"
 					th:action="@{/community/{id}/delete(id=${post.id})}" method="post"
 					style="display: inline;">
