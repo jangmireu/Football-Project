@@ -508,13 +508,29 @@ public class CommunityController {
      */
     @PostMapping("/community/{id}/dislike")
     @ResponseBody
-    public ResponseEntity<String> dislikePost(@PathVariable("id") Long id) {
+    public ResponseEntity<Map<String, Object>> dislikePost(@PathVariable("id") Long id,
+                                                           HttpSession session) {
+        Long userId = (Long) session.getAttribute("loggedInUserId");
+        if (userId == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "로그인 상태가 아닙니다.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // 싫어요 토글 로직 호출
+        boolean disliked = communityService.togglePostDislike(id, userId);
+
+        // 싫어요 상태와 최신 싫어요 수 가져오기
         CommunityPost post = communityRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
-        post.setDislikes(post.getDislikes() + 1);  // 싫어요 수 증가
-        communityRepository.save(post);
-        return ResponseEntity.ok("싫어요가 추가되었습니다.");
+            .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", disliked ? "싫어요가 추가되었습니다." : "싫어요가 취소되었습니다.");
+        response.put("dislikes", post.getDislikes()); // 최신 싫어요 수 반환
+
+        return ResponseEntity.ok(response);
     }
+
 
     // === [답글 좋아요 추가] ===
     /**

@@ -1,10 +1,12 @@
 package com.example.football.service;
 
 import com.example.football.entity.CommunityPost;
+import com.example.football.entity.PostDislike;
 import com.example.football.entity.Reply;
 import com.example.football.entity.ReplyLike;
 import com.example.football.entity.PostLike; // 추가
 import com.example.football.repository.CommunityRepository;
+import com.example.football.repository.PostDislikeRepository;
 import com.example.football.repository.ReplyLikeRepository;
 import com.example.football.repository.ReplyRepository;
 import com.example.football.repository.PostLikeRepository; // 추가
@@ -22,18 +24,21 @@ public class CommunityService {
     private final CommunityRepository communityRepository;
     private final ReplyRepository replyRepository;
     private final ReplyLikeRepository replyLikeRepository;
-    private final PostLikeRepository postLikeRepository;  // 추가
-
+    private final PostLikeRepository postLikeRepository;  
+    private final PostDislikeRepository postDislikeRepository;
+    
     // 생성자 주입
     @Autowired
     public CommunityService(CommunityRepository communityRepository,
                             ReplyRepository replyRepository,
                             ReplyLikeRepository replyLikeRepository,
-                            PostLikeRepository postLikeRepository) { // 수정
+                            PostLikeRepository postLikeRepository,
+                            PostDislikeRepository postDislikeRepository) { 
         this.communityRepository = communityRepository;
         this.replyRepository = replyRepository;
         this.replyLikeRepository = replyLikeRepository;
         this.postLikeRepository = postLikeRepository; // 추가
+        this.postDislikeRepository = postDislikeRepository;
     }
 
     /**
@@ -144,4 +149,39 @@ public class CommunityService {
             return true;  // 좋아요 추가
         }
     }
+    
+    @Transactional
+    public boolean togglePostDislike(Long postId, Long userId) {
+        // 사용자가 이미 해당 게시글을 싫어요 했는지 확인
+        if (postDislikeRepository.existsByPostIdAndUserId(postId, userId)) { // 수정
+            // 싫어요 취소 로직
+            postDislikeRepository.deleteByPostIdAndUserId(postId, userId); // 수정
+
+            // 게시글 싫어요 수 감소
+            CommunityPost post = communityRepository.findById(postId)
+                    .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+            post.setDislikes(post.getDislikes() - 1);
+            communityRepository.save(post);
+
+            return false;  // 싫어요 취소
+        } else {
+            // 싫어요 추가 로직
+            CommunityPost post = communityRepository.findById(postId)
+                    .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+            // PostDislike 엔티티 생성 및 저장
+            PostDislike postDislike = new PostDislike();
+            postDislike.setUserId(userId);
+            postDislike.setPost(post);
+            postDislikeRepository.save(postDislike);
+
+            // 게시글 싫어요 수 증가
+            post.setDislikes(post.getDislikes() + 1);
+            communityRepository.save(post);
+
+            return true;  // 싫어요 추가
+        }
+    }
+
+    
 }

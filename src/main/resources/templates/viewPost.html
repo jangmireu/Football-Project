@@ -251,17 +251,30 @@ h1 {
 
 	// 싫어요 요청
 	async function handleDislikePost(postId) {
-		const response = await
-		fetch(`/community/${postId}/dislike`, {
-			method : 'POST'
-		});
-		if (response.ok) {
-			const dislikesElement = document.getElementById('dislikes-count');
-			dislikesElement.textContent = parseInt(dislikesElement.textContent) + 1;
-		} else {
-			alert('싫어요 처리 중 오류가 발생했습니다.');
-		}
-	}
+    try {
+        const response = await fetch(`/community/${postId}/dislike`, {
+            method: 'POST'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+
+            // 싫어요 숫자 업데이트
+            const dislikesElement = document.getElementById("dislikes-count");
+            if (dislikesElement) {
+                dislikesElement.textContent = data.dislikes;
+            }
+
+            alert(data.message);
+        } else {
+            const errorText = await response.text();
+            alert(`싫어요 처리 중 오류가 발생했습니다: ${errorText}`);
+        }
+    } catch (error) {
+        console.error("Fetch Exception:", error);
+        alert("서버와 통신 중 오류가 발생했습니다.");
+    }
+}
 
 	async function handleLikeReply(replyId, userId) {
 		if (!userId) {
@@ -327,8 +340,10 @@ h1 {
 			</span> <span th:if="${post.attachmentPath != null}"> <strong>첨부파일:</strong>
 				<a th:href="@{${post.attachmentPath}}" download>다운로드</a>
 			</span> <span><strong>좋아요:</strong> <span id="likes-count"
-				th:text="${post.likes}">0</span></span> <span><strong>싫어요:</strong>
-				<span id="dislikes-count" th:text="${post.dislikes}">0</span></span>
+				th:text="${post.likes}">0</span></span> 
+				 <span><strong>싫어요:</strong> 
+        <span id="dislikes-count" th:text="${post.dislikes}">0</span>
+    </span>
 		</div>
 
 		<div class="image-wrapper" th:if="${post.imagePath != null}">
@@ -346,12 +361,12 @@ h1 {
 				<button th:onclick="'handleLikePost(' + ${post.id} + ')'"
 					style="background: none; border: none; cursor: pointer;">
 					<img src="/like.png" alt="좋아요" style="width: 30px; height: 30px;">좋아요
-				</button> <!-- 싫어요 버튼 (추가 구현 필요 시) -->
-				<button th:onclick="'handleDislikePost(' + ${post.id} + ')'"
-					style="background: none; border: none; cursor: pointer;">
-					<img src="/dislike.png" alt="싫어요"
-						style="width: 30px; height: 30px;">싫어요
-				</button>
+				</button> 				
+				 <!-- 싫어요 버튼 -->
+    <button th:onclick="'handleDislikePost(' + ${post.id} + ')'" 
+            style="background: none; border: none; cursor: pointer;">
+        <img src="/dislike.png" alt="싫어요" style="width: 30px; height: 30px;">싫어요
+    </button>
 		</div>
 
 
