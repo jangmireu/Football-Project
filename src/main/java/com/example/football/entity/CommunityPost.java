@@ -1,12 +1,9 @@
 package com.example.football.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDateTime;
 
 @Entity
 public class CommunityPost {
@@ -20,8 +17,17 @@ public class CommunityPost {
     private String content;
     private int views = 0; // 기본값 0으로 설정
     private LocalDateTime createdAt = LocalDateTime.now();
-    
-    
+
+    // 파일 경로 필드 추가(이미지, 첨부파일)
+    private String imagePath;
+    private String attachmentPath;
+
+    private int likes = 0;  // 좋아요 수
+    private int dislikes = 0;  // 싫어요 수
+
+    // 답글과의 연관 관계 설정
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reply> replies = new ArrayList<>();
 
     // Getters and Setters
     public Long getId() {
@@ -70,5 +76,45 @@ public class CommunityPost {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public String getAttachmentPath() {
+        return attachmentPath;
+    }
+
+    public void setAttachmentPath(String attachmentPath) {
+        this.attachmentPath = attachmentPath;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
+    }
+
+    public List<Reply> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Reply> replies) {
+        this.replies = replies;
     }
 }

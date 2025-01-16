@@ -16,7 +16,15 @@ public class User {
     
     private String username;
     private String password;
-    private String email; // 이메일 필드 추가
+    private String email;
+    
+    @Column(unique = true) // 닉네임 중복 방지
+    private String nickname;
+    
+    private String address;
+    private String name;       // 이름
+    private String birthDate;  // 생년월일
+    private String phone;
     
     private int points;
     
@@ -60,6 +68,45 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     
     public int getPoints() { return points; }
     public void setPoints(int points) { this.points = points; }

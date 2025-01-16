@@ -29,11 +29,20 @@ public class SignupController {
     public String register(
             @RequestParam("username") String username,
             @RequestParam("password") String password,
+            @RequestParam("confirmPassword") String confirmPassword,
             @RequestParam("email") String email,
+            @RequestParam("name") String name,
+            @RequestParam("birthDate") String birthDate,
+            @RequestParam("phone") String phone,
+            @RequestParam("address") String address,
+            @RequestParam("nickname") String nickname,
             RedirectAttributes redirectAttributes) {
 
         // 필수 입력 값 확인
-        if (!StringUtils.hasText(username) || !StringUtils.hasText(password) || !StringUtils.hasText(email)) {
+        if (!StringUtils.hasText(username) || !StringUtils.hasText(password) || 
+                !StringUtils.hasText(email) || !StringUtils.hasText(name) || 
+                !StringUtils.hasText(birthDate) || !StringUtils.hasText(phone) || 
+                !StringUtils.hasText(address) || !StringUtils.hasText(nickname)) {
             redirectAttributes.addFlashAttribute("message", "모든 필드를 입력해주세요.");
             return "redirect:/signup";
         }
@@ -43,6 +52,18 @@ public class SignupController {
             redirectAttributes.addFlashAttribute("message", "중복된 아이디입니다.");
             return "redirect:/signup";
         }
+        
+        // 중복 닉네임 확인
+        if (userRepository.findByNickname(nickname) != null) {
+            redirectAttributes.addFlashAttribute("message", "중복된 닉네임입니다.");
+            return "redirect:/signup";
+        }
+        
+     // 비밀번호와 재확인이 일치하는지 확인
+        if (!password.equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("message", "비밀번호와 비밀번호 재확인이 일치하지 않습니다.");
+            return "redirect:/signup";
+        }
 
         try {
             // User 객체 생성 후 데이터베이스에 저장
@@ -50,6 +71,11 @@ public class SignupController {
             user.setUsername(username);
             user.setPassword(password);
             user.setEmail(email);
+            user.setName(name);
+            user.setBirthDate(birthDate);
+            user.setPhone(phone);
+            user.setAddress(address);
+            user.setNickname(nickname);
             user.setPoints(1000); // 초기 포인트 설정
 
             userRepository.save(user);
