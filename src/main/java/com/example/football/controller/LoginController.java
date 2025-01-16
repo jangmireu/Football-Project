@@ -52,6 +52,7 @@ public class LoginController {
             session.setAttribute("loggedInUsername", user.getUsername()); // 사용자 이름
             session.setAttribute("loggedInUserId", user.getId()); // 사용자 ID
             session.setAttribute("loggedInUserPoints", user.getPoints()); // 사용자 포인트
+            session.setAttribute("loggedInNickname", user.getNickname()); // 닉네임 저장
 
             return "redirect:/matches/list"; // 로그인 후 리다이렉트
         } else {

@@ -259,101 +259,87 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script>
-let username = null;
+let nickname = null;
 
-//서버에서 현재 사용자 이름 가져오기
-fetch('/api/current-username')
- .then(response => response.text())
- .then(data => {
-     username = data;
- });
- 
-function getMatchIdFromUrl() {
-    const path = window.location.pathname; // 예: /matches/details/497615
-    const segments = path.split('/'); // '/'를 기준으로 경로 분리
-    return segments[segments.length - 1]; // 마지막 부분이 match.id
-}
+// 서버에서 닉네임 가져오기
+fetch('/api/current-nickname')
+    .then(response => response.text())
+    .then(data => {
+        nickname = data;
+    });
 
-const matchId = getMatchIdFromUrl();
-
+const matchId = window.location.pathname.split('/').pop();
 const socket = new SockJS('/chat-websocket');
 const stompClient = Stomp.over(socket);
 
-//WebSocket 연결
+// WebSocket 연결
 stompClient.connect({}, function () {
- console.log("WebSocket 연결 성공");
+    console.log("WebSocket 연결 성공");
 
- // 특정 경기의 채팅 채널 구독
- stompClient.subscribe(`/topic/messages/${matchId}`, function (message) {
-     const messageDiv = document.createElement("div");
-     messageDiv.textContent = message.body; // 서버에서 받은 메시지 출력
-     document.getElementById("messages").appendChild(messageDiv);
- });
+    // 특정 경기의 채팅 채널 구독
+    stompClient.subscribe(`/topic/messages/${matchId}`, function (message) {
+        const messageDiv = document.createElement("div");
+        messageDiv.textContent = message.body; // 서버에서 받은 메시지 출력
+        document.getElementById("messages").appendChild(messageDiv);
+    });
 
- // 기존 채팅 기록 로드
- loadChatLogs();
+    // 기존 채팅 기록 로드
+    loadChatLogs();
 });
 
-//기존 채팅 기록 로드
+// 기존 채팅 기록 로드
 async function loadChatLogs() {
- try {
-     const response = await fetch(`/api/chat/logs/${matchId}`);
-     const logs = await response.json();
-
-     const messagesDiv = document.getElementById("messages");
-     messagesDiv.innerHTML = ""; // 기존 메시지 초기화
-
-     logs.forEach(log => {
-         const messageDiv = document.createElement("div");
-         messageDiv.textContent = `${log.user}: ${log.content}`;
-         messagesDiv.appendChild(messageDiv);
-     });
- } catch (error) {
-     console.error("채팅 기록 로드 중 오류 발생:", error);
- }
+    try {
+        const response = await fetch(`/api/chat/logs/${matchId}`);
+        const logs = await response.json();
+        const messagesDiv = document.getElementById("messages");
+        messagesDiv.innerHTML = "";
+        logs.forEach(log => {
+            const messageDiv = document.createElement("div");
+            messageDiv.textContent = `${log.user}: ${log.content}`;
+            messagesDiv.appendChild(messageDiv);
+        });
+    } catch (error) {
+        console.error("채팅 기록 로드 중 오류 발생:", error);
+    }
 }
 
-//채팅 메시지 전송
+// 채팅 메시지 전송
 function sendMessage() {
- const chatInput = document.getElementById("chatInput");
- const message = chatInput.value.trim();
-
- if (message === "") {
-     alert("메시지를 입력하세요.");
-     return;
- }
-
- if (username === null) {
-     alert("사용자 이름을 불러오지 못했습니다. 다시 시도해주세요.");
-     return;
- }
-
- // 사용자 이름, 메시지, 경기 ID를 함께 전송
- stompClient.send(`/app/sendMessage/${matchId}`, {}, JSON.stringify({
-     matchId: matchId, // 현재 경기의 matchId
-     user: username,
-     content: message
- }));
-
- chatInput.value = ""; // 입력창 초기화
+    const chatInput = document.getElementById("chatInput");
+    const message = chatInput.value.trim();
+    if (message === "") {
+        alert("메시지를 입력하세요.");
+        return;
+    }
+    if (nickname === null) {
+        alert("닉네임을 불러오지 못했습니다.");
+        return;
+    }
+    stompClient.send(`/app/sendMessage/${matchId}`, {}, JSON.stringify({
+        matchId: matchId,
+        user: nickname,
+        content: message
+    }));
+    chatInput.value = "";
 }
 
-//Enter 키로 메시지 전송
+// Enter 키로 메시지 전송
 document.getElementById("chatInput").addEventListener("keydown", function (event) {
- if (event.key === "Enter") {
-     sendMessage(); // 메시지 전송 함수 호출
-     event.preventDefault(); // Enter 키의 기본 동작(줄바꿈)을 방지
- }
+    if (event.key === "Enter") {
+        sendMessage();
+        event.preventDefault(); // Enter 키의 기본 동작(줄바꿈)을 방지
+    }
 });
 
-//모달 열기
+// 모달 열기
 function openModal() {
- document.getElementById("chatRulesModal").style.display = "flex";
+    document.getElementById("chatRulesModal").style.display = "flex";
 }
 
-//모달 닫기
+// 모달 닫기
 function closeModal() {
- document.getElementById("chatRulesModal").style.display = "none";
+    document.getElementById("chatRulesModal").style.display = "none";
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -423,7 +409,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
 </script>
+
 
 
 
