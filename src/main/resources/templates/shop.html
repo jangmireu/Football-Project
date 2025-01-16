@@ -103,6 +103,16 @@ body {
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-between;
+
+}
+
+/* 자세히 보기 링크 스타일 */
+.details-link {
+    color: #007bff;
+    text-decoration: underline;
+    font-size: 16px;
+    margin-bottom: 20px; /* 구매하기 버튼과 충분히 간격 */
+    display: inline-block;
 }
 
 .card img {
@@ -154,6 +164,85 @@ body {
 		width: 100%; /* 모바일에서는 카드가 전체 너비를 차지하도록 설정 */
 	}
 }
+
+.modal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed; /* 화면 전체에서 고정 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 배경 어두운 투명 효과 */
+    z-index: 1000; /* 다른 요소 위에 표시 */
+    justify-content: center;
+    align-items: center;
+}
+
+/* 모달 콘텐츠 */
+.modal-content {
+    background-color: white; /* 흰색 배경 */
+    border-radius: 8px; /* 부드러운 모서리 */
+    width: 90%; /* 기본 너비 (작은 화면) */
+    max-width: 500px; /* 최대 너비 */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+    position: relative; /* 내부 위치를 조정 가능하게 설정 */
+    animation: fadeIn 0.3s ease-in-out; /* 부드러운 애니메이션 */
+}
+
+/* 닫기 버튼 */
+.modal-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+    background-color: #555;
+}
+
+/* 취소 버튼 */
+.modal-content button.cancel {
+    background-color: #d9534f;
+}
+
+.modal-content button.cancel:hover {
+    background-color: #c9302c;
+}
+
+/* 모달 닫기 버튼 */
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #333;
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
 </style>
 </head>
 <body>
@@ -174,6 +263,32 @@ body {
 			<button onclick="location.href='/mypage'">마이페이지</button>
 		</div>
 	</div>
+	
+	<!-- 구매 모달 -->
+<div id="purchaseModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <h2>아이템 구매</h2>
+        <p>선택한 아이템: <span id="itemName"></span></p>
+        <p>가격: <span id="itemPrice"></span> 포인트</p>
+        <form th:action="@{/purchase}" method="post">
+    <input type="hidden" name="itemId" id="itemId">
+    <label for="size">사이즈 선택:</label>
+    <select name="size" id="size" required>
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+        <option value="2XL">2XL</option>
+        <option value="3XL">3XL</option>
+    </select>
+    <br><br>
+    <button type="submit" class="confirm">구매 결정</button>
+    <button type="button" class="cancel" onclick="closeModal()">취소</button>
+</form>
+
+    </div>
+</div>
 
 	<!-- 포인트 상점 콘텐츠 -->
 	<div class="content">
@@ -184,6 +299,10 @@ body {
     <span th:if="${session.loggedInUser != null}" th:text="${session.loggedInUser?.points ?: 0} + '점'"></span>
     <span th:if="${session.loggedInUser == null}">0점</span>
 </p>
+
+<p style="color: red; font-size: 14px; margin-top: 10px;">
+            ※회원가입 진행 시 설정한 주소로 배송됩니다. 구매 전 마이페이지에서 주소를 확인해주세요.※
+        </p>
 		</div>
 		<p th:if="${message != null}" th:text="${message}"
 			style="color: green;"></p>
@@ -194,12 +313,47 @@ body {
 				<img th:src="@{${item.imageUrl}}" alt="상품 이미지">
 				<h3 th:text="${item.name}">상품 이름</h3>
 				<p th:text="${item.price} + ' 포인트'">가격</p>
+				
+				
+				<a class="details-link" th:href="${item.link}" target="_blank" th:text="'자세히 보기'"></a>
+				
+				
 				<form th:action="@{/purchase}" method="post">
 					<input type="hidden" name="itemId" th:value="${item.id}" />
-					<button type="submit">구매하기</button>
+					<button type="button" th:onclick="'openModal(' + ${item.id} + ')'">구매하기</button>
 				</form>
 			</div>
 		</div>
 	</div>
 </body>
 </html>
+
+<script>
+function openModal(itemId) {
+    const modal = document.getElementById('purchaseModal');
+    modal.style.display = 'flex';
+
+    // 서버에서 가져온 아이템 정보 (템플릿에서 전달받는 데이터 활용 가능)
+    const items = [
+        { id: 1, name: "맨시티 유니폼", price: 200000 },
+        { id: 2, name: "리버풀 유니폼", price: 200000 },
+        { id: 3, name: "아스날 유니폼", price: 200000 },
+        { id: 4, name: "첼시 유니폼", price: 200000 },
+        { id: 5, name: "토트넘 유니폼", price: 200000 },
+        { id: 6, name: "맨유 유니폼", price: 200000 }
+    ];
+    const selectedItem = items.find(item => item.id === itemId);
+
+    if (selectedItem) {
+        document.getElementById('itemId').value = selectedItem.id;
+        document.getElementById('itemName').innerText = selectedItem.name;
+        document.getElementById('itemPrice').innerText = selectedItem.price;
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('purchaseModal');
+    modal.style.display = 'none';
+}
+
+</script>

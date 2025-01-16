@@ -1,14 +1,17 @@
 package com.example.football.controller;
-
 import com.example.football.entity.CommunityPost;
 import com.example.football.entity.Reply;
 import com.example.football.entity.Standing;
 import com.example.football.entity.User;
 import com.example.football.repository.CommunityRepository;
+import com.example.football.repository.PostLikeRepository;
+import com.example.football.repository.ReplyLikeRepository;
 import com.example.football.repository.ReplyRepository;
+import com.example.football.repository.PostDislikeRepository;
 import com.example.football.service.CommunityService;
 import com.example.football.service.StandingsService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +24,6 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,8 +37,11 @@ public class CommunityController {
 
     private final CommunityRepository communityRepository;
     private final ReplyRepository replyRepository;
+    private final ReplyLikeRepository replyLikeRepository;
+    private final PostLikeRepository postLikeRepository;
     private final StandingsService standingsService;
     private final CommunityService communityService;
+    private final PostDislikeRepository postDislikeRepository; // PostDislikeRepository 추가
 
     private final String uploadDir = new File("uploads").getAbsolutePath() + File.separator;
     private final String relativePath = "/uploads/";
@@ -44,10 +49,16 @@ public class CommunityController {
     @Autowired
     public CommunityController(CommunityRepository communityRepository,
                                ReplyRepository replyRepository,
+                               ReplyLikeRepository replyLikeRepository,
+                               PostLikeRepository postLikeRepository,
                                StandingsService standingsService,
+                               PostDislikeRepository postDislikeRepository,
                                CommunityService communityService) {
         this.communityRepository = communityRepository;
         this.replyRepository = replyRepository;
+        this.replyLikeRepository = replyLikeRepository;
+        this.postLikeRepository = postLikeRepository;
+        this.postDislikeRepository = postDislikeRepository; // 여기 초기화
         this.standingsService = standingsService;
         this.communityService = communityService;
     }
@@ -312,27 +323,48 @@ public class CommunityController {
     /**
      * 게시글 삭제
      */
+    @Transactional
     @PostMapping("/community/{id}/delete")
     public String deletePost(@PathVariable("id") Long id,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
         String loggedInUsername = (String) session.getAttribute("loggedInUsername");
 
+        // 게시글 조회
         CommunityPost post = communityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
+        // 작성자 확인
         if (!post.getAuthor().equals(loggedInUsername)) {
             redirectAttributes.addFlashAttribute("message", "삭제 권한이 없습니다.");
             return "redirect:/community";
         }
-        
-     // 게시글 삭제 (연관된 답글도 자동 삭제됨)
-        communityRepository.delete(post);
-        
-        communityRepository.delete(post);
-        redirectAttributes.addFlashAttribute("message", "게시글이 삭제되었습니다.");
+
+        try {
+        	// 1. 게시글과 연결된 좋아요 및 싫어요 데이터 삭제
+            postLikeRepository.deleteByPostId(id);
+            postDislikeRepository.deleteByPostId(id); // 싫어요 데이터 삭제
+
+            // 2. 게시글과 연관된 댓글 좋아요 데이터 삭제
+            List<Reply> replies = replyRepository.findByPostId(id);
+            for (Reply reply : replies) {
+                replyLikeRepository.deleteByReplyId(reply.getId());
+            }
+
+            // 3. 게시글과 연관된 댓글 삭제
+            replyRepository.deleteByPostId(id);
+
+            // 4. 게시글 삭제
+            communityRepository.deleteById(id);
+
+            redirectAttributes.addFlashAttribute("message", "게시글이 삭제되었습니다.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "게시글 삭제 중 오류가 발생했습니다: " + e.getMessage());
+        }
+
         return "redirect:/community";
     }
+
 
     /**
      * 답글 수정 폼
