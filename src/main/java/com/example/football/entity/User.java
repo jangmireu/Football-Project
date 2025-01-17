@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Column;
 
 @Entity
@@ -26,7 +28,10 @@ public class User {
     private String birthDate;  // 생년월일
     private String phone;
     private int points;
-    private String badge; // 현재 보유중인 훈장 이름
+    
+    @ManyToOne
+    @JoinColumn(name = "badge_id", referencedColumnName = "id") // Badge 테이블의 외래 키
+    private Badge badge;
     
     @Column(name = "last_login_date")
     private LocalDate lastLoginDate;
@@ -106,11 +111,11 @@ public class User {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-    public String getBadge() {
+    public Badge getBadge() {
         return badge;
     }
 
-    public void setBadge(String badge) {
+    public void setBadge(Badge badge) {
         this.badge = badge;
     }
     

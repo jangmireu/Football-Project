@@ -199,8 +199,70 @@
         .chat-rules-button:hover {
             background-color: #0056b3;
         }    
-    
+    	
+    	.dynamic-badge {
+    display: inline-block;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 12px;
+    margin-right: 8px;
+    color: white; /* 텍스트 색상 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+    line-height: 1; /* 텍스트 라인 간격 조절 */
+    background: linear-gradient(to right, #ffd700, #ffa500); /* 기본 배경 */
+    animation: pulse 1.5s infinite;
+}
 
+.dynamic-badge.gold-badge {
+    background: linear-gradient(to right, #ffd700, #ffa500);
+    color: black;
+}
+
+.dynamic-badge.silver-badge {
+    background: linear-gradient(to right, #c0c0c0, #a9a9a9);
+    color: black;
+}
+
+.dynamic-badge.bronze-badge {
+    background: linear-gradient(to right, #cd7f32, #a0522d);
+    color: black;
+}
+
+
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(255, 165, 0, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+    }
+}
+    	
+    	.chat-message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.chat-message .dynamic-badge {
+    margin-right: 8px;
+}
+
+.chat-message strong {
+    margin-right: 5px;
+}
+
+.chat-message .chat-content {
+    color: #333;
+}
+    	
         
     </style>
 </head>
@@ -245,15 +307,23 @@
         </div>
 </div>
         
-        <div class="chat-container">
-            <div class="messages" id="messages">
-                <!-- 메시지가 표시될 영역 -->
+       <div class="chat-container">
+    <div class="messages" id="messages">
+        <!-- 메시지가 표시될 영역 -->
+        <div th:each="log : ${chatLogs}" class="chat-message">
+            <div class="badge-wrapper">
+                <span class="dynamic-badge" th:classappend="${log.badge.toLowerCase()}" th:text="${log.badge}"></span>
+                <strong th:text="${log.user}">닉네임</strong>
             </div>
-            <div class="message-input">
-                <input type="text" id="chatInput" placeholder="메시지를 입력하세요...">
-                <button onclick="sendMessage()">전송</button>
-            </div>
+            <p th:text="${log.content}">메시지 내용</p>
         </div>
+    </div>
+    <div class="message-input">
+        <input type="text" id="chatInput" placeholder="메시지를 입력하세요...">
+        <button onclick="sendMessage()">전송</button>
+    </div>
+</div>
+
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
@@ -278,10 +348,13 @@ stompClient.connect({}, function () {
 
     // 특정 경기의 채팅 채널 구독
     stompClient.subscribe(`/topic/messages/${matchId}`, function (message) {
-        const messageDiv = document.createElement("div");
-        messageDiv.textContent = message.body; // 서버에서 받은 메시지 출력
-        document.getElementById("messages").appendChild(messageDiv);
-    });
+    const data = JSON.parse(message.body); // JSON 데이터 파싱
+    console.log("Received message data:", data); // 데이터 확인
+    const messageDiv = createChatMessage(data); // 메시지 생성
+    document.getElementById("messages").appendChild(messageDiv); // 메시지 추가
+});
+
+
 
     // 기존 채팅 기록 로드
     loadChatLogs();
@@ -295,14 +368,46 @@ async function loadChatLogs() {
         const messagesDiv = document.getElementById("messages");
         messagesDiv.innerHTML = "";
         logs.forEach(log => {
-            const messageDiv = document.createElement("div");
-            messageDiv.textContent = `${log.user}: ${log.content}`;
+            const messageDiv = createChatMessage(log);
             messagesDiv.appendChild(messageDiv);
         });
     } catch (error) {
         console.error("채팅 기록 로드 중 오류 발생:", error);
     }
 }
+
+
+//채팅 메시지 생성
+function createChatMessage(data) {
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("chat-message");
+
+    const badgeSpan = document.createElement("span");
+    badgeSpan.classList.add("dynamic-badge");
+
+    if (data.badge) {
+        badgeSpan.classList.add(data.badge.toLowerCase().replace(" ", "-"));
+        badgeSpan.textContent = data.badge; // badge 이름 표시
+        console.log("Badge added:", data.badge); // 디버깅 로그
+    } else {
+        console.log("No badge provided");
+    }
+
+    const userStrong = document.createElement("strong");
+    userStrong.textContent = data.user;
+
+    const contentSpan = document.createElement("span");
+    contentSpan.classList.add("chat-content");
+    contentSpan.textContent = `: ${data.content}`;
+
+    messageDiv.appendChild(badgeSpan);
+    messageDiv.appendChild(userStrong);
+    messageDiv.appendChild(contentSpan);
+
+    return messageDiv;
+}
+
+
 
 // 채팅 메시지 전송
 function sendMessage() {
@@ -341,79 +446,7 @@ function openModal() {
 function closeModal() {
     document.getElementById("chatRulesModal").style.display = "none";
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    const chatbotToggle = document.getElementById("chatbot-toggle");
-    const chatbotWindow = document.getElementById("chatbot-window");
-    const chatbotClose = document.getElementById("chatbot-close");
-    const chatbotSend = document.getElementById("chatbot-send");
-    const chatbotInput = document.getElementById("chatbot-input");
-    const chatbotMessages = document.getElementById("chatbot-messages");
-
-    // 챗봇 열기/닫기
-    chatbotToggle.addEventListener("click", () => {
-        chatbotWindow.style.display = chatbotWindow.style.display === "none" ? "block" : "none";
-    });
-
-    chatbotClose.addEventListener("click", () => {
-        chatbotWindow.style.display = "none";
-    });
-
-    // 메시지 전송 함수
-    async function sendMessage() {
-        const userInput = chatbotInput.value.trim();
-        if (!userInput) return;
-
-        // 사용자 메시지 추가
-        chatbotMessages.innerHTML += `<div style="text-align: right; margin: 10px 0;">
-            <span style="display: inline-block; background: #f1f1f1; color: #333; padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 14px;">
-                ${userInput}
-            </span>
-        </div>`;
-        chatbotInput.value = "";
-
-        // 서버에 메시지 전송
-        try {
-            const response = await fetch("/api/chatbot", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ question: userInput }),
-            });
-
-            const data = await response.text();
-
-            // 챗봇 응답 추가
-            chatbotMessages.innerHTML += `<div style="text-align: left; margin: 10px 0;">
-                <span style="display: inline-block; background: #f1f1f1; color: #333; padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 14px;">
-                    챗봇: ${data}
-                </span>
-            </div>`;
-            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-        } catch (error) {
-            chatbotMessages.innerHTML += `<div style="text-align: left; margin: 10px 0;">
-                <span style="display: inline-block; background: #ffe6e6; color: #d32f2f; padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 14px;">
-                    챗봇: 서버와 연결할 수 없습니다.
-                </span>
-            </div>`;
-        }
-    }
-
-    // 전송 버튼 클릭 이벤트
-    chatbotSend.addEventListener("click", sendMessage);
-
-    // 엔터 키 이벤트
-    chatbotInput.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" && !event.isComposing) {
-            event.preventDefault();
-            sendMessage();
-        }
-    });
-});
-
 </script>
-
-
-
 
 	<!-- Chatbot UI -->
 <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
