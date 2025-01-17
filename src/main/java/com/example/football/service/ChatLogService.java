@@ -19,12 +19,12 @@ public class ChatLogService {
     public List<ChatLogDTO> getChatLogs(Long matchId) {
         List<ChatLog> chatLogs = chatLogRepository.findByMatchIdOrderByTimestampAsc(matchId);
         return chatLogs.stream()
-                .map(log -> new ChatLogDTO(
-                        log.getId(),
-                        log.getUser().getNickname(),
-                        log.getContent(),
-                        log.getUser().getBadge() != null ? log.getUser().getBadge().getName() : null
-                ))
+        		.map(log -> new ChatLogDTO(
+        			    log.getId(),
+        			    log.getUser().getNickname(), // user
+        			    log.getContent(),
+        			    log.getUser().getBadge() != null ? log.getUser().getBadge().getName() : null
+        			))
                 .collect(Collectors.toList());
     }
 
