@@ -265,7 +265,9 @@
     	
         
     </style>
+    
 </head>
+
 <body>
     <div class="container">
         <h1>실시간 채팅</h1>
@@ -328,7 +330,31 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+
+	<!-- Chatbot UI -->
+<div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <div id="chatbot-window" style="display: none; width: 500px; height: 570px; background: white; border: 1px solid #ccc; box-shadow: 0px 4px 8px rgba(0,0,0,0.2); border-radius: 8px;">
+        <!-- 챗봇 헤더 -->
+        <div style="background: #333; color: white; padding: 10px; border-top-left-radius: 8px; border-top-right-radius: 8px; font-weight: bold;">
+            챗봇
+            <button id="chatbot-close" style="float: right; background: none; border: none; color: white; font-size: 16px; cursor: pointer;">×</button>
+        </div>
+        <!-- 메시지 영역 -->
+        <div id="chatbot-messages" style="padding: 10px; height: 450px; overflow-y: auto; font-size: 14px; border-bottom: 1px solid #ccc;">
+            <!-- 메시지가 여기에 추가됩니다 -->
+        </div>
+        <!-- 입력창 -->
+        <div style="padding: 5px; border-top: 1px solid #ccc; display: flex; gap: 5px; align-items: center;">
+            <input id="chatbot-input" type="text" placeholder="질문을 입력하세요" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+            <button id="chatbot-send" style="padding: 8px 12px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;">전송</button>
+        </div>
+    </div>
+    <button id="chatbot-toggle" style="width: 70px; height: 70px; background: #333; color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px;">💬</button>
+</div>
+</body>
 <script>
+
 let nickname = null;
 
 // 서버에서 닉네임 가져오기
@@ -343,7 +369,8 @@ const socket = new SockJS('/chat-websocket');
 const stompClient = Stomp.over(socket);
 
 // WebSocket 연결
-stompClient.connect({}, function () {
+stompClient.connect({}, 
+	function () {
     console.log("WebSocket 연결 성공");
 
     // 특정 경기의 채팅 채널 구독
@@ -447,26 +474,4 @@ function closeModal() {
     document.getElementById("chatRulesModal").style.display = "none";
 }
 </script>
-
-	<!-- Chatbot UI -->
-<div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
-    <div id="chatbot-window" style="display: none; width: 500px; height: 570px; background: white; border: 1px solid #ccc; box-shadow: 0px 4px 8px rgba(0,0,0,0.2); border-radius: 8px;">
-        <!-- 챗봇 헤더 -->
-        <div style="background: #333; color: white; padding: 10px; border-top-left-radius: 8px; border-top-right-radius: 8px; font-weight: bold;">
-            챗봇
-            <button id="chatbot-close" style="float: right; background: none; border: none; color: white; font-size: 16px; cursor: pointer;">×</button>
-        </div>
-        <!-- 메시지 영역 -->
-        <div id="chatbot-messages" style="padding: 10px; height: 450px; overflow-y: auto; font-size: 14px; border-bottom: 1px solid #ccc;">
-            <!-- 메시지가 여기에 추가됩니다 -->
-        </div>
-        <!-- 입력창 -->
-        <div style="padding: 5px; border-top: 1px solid #ccc; display: flex; gap: 5px; align-items: center;">
-            <input id="chatbot-input" type="text" placeholder="질문을 입력하세요" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
-            <button id="chatbot-send" style="padding: 8px 12px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;">전송</button>
-        </div>
-    </div>
-    <button id="chatbot-toggle" style="width: 70px; height: 70px; background: #333; color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px;">💬</button>
-</div>
-</body>
 </html>

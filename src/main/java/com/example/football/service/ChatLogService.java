@@ -17,10 +17,10 @@ public class ChatLogService {
     public ChatLog saveChatLog(Long matchId, User user, String content) {
         ChatLog chatLog = new ChatLog();
         chatLog.setMatchId(matchId);
-        chatLog.setUser(user); // User 객체 설정
+        chatLog.setUser(user);
         chatLog.setContent(content);
         if (user.getBadge() != null) {
-            chatLog.setBadge(user.getBadge().getName()); // Badge 이름 설정
+            chatLog.setBadge(user.getBadge().getName());
         }
         return chatLogRepository.save(chatLog);
     }

@@ -20,6 +20,7 @@ public class ChatLog {
     @CreationTimestamp
     private LocalDateTime timestamp; // 생성 시간
     
+    
     private String badge; // 사용자 훈장 정보 추가
     
  // 기본 생성자
