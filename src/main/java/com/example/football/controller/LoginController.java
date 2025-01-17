@@ -65,7 +65,7 @@ public class LoginController {
 
     @GetMapping("/logout")
     public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
-        session.invalidate();
+    	session.invalidate(); // 세션 무효화
         redirectAttributes.addFlashAttribute("message", "로그아웃 되었습니다.");
         return "redirect:/matches/list";
     }
