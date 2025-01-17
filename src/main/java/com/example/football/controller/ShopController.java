@@ -82,7 +82,7 @@ public class ShopController {
         return "shop";
     }
 
-    // 훈장 구매 요청을 처리하는 메서드
+ // 훈장 구매 요청을 처리하는 메서드
     @PostMapping("/purchase/badge")
     public String purchaseBadge(@RequestParam("badgeId") Long badgeId, HttpSession session, Model model) {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
@@ -90,11 +90,16 @@ public class ShopController {
             return "redirect:/login"; // 로그인하지 않은 경우 로그인 페이지로 리디렉션
         }
 
-        Badge badge = badgeRepository.findById(badgeId).orElseThrow(() -> new IllegalArgumentException("잘못된 훈장 ID입니다."));
+        // 훈장 조회
+        Badge badge = badgeRepository.findById(badgeId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 훈장 ID입니다."));
+
         if (loggedInUser.getPoints() >= badge.getPrice()) {
             // 포인트 차감
             loggedInUser.setPoints(loggedInUser.getPoints() - badge.getPrice());
-            loggedInUser.setBadge(badge.getName()); // 사용자 훈장 업데이트
+            
+            // 사용자 훈장 업데이트 (엔티티 연결)
+            loggedInUser.setBadge(badge); 
             userRepository.save(loggedInUser);
 
             model.addAttribute("message", badge.getName() + " 훈장을 성공적으로 구매했습니다!");
@@ -102,9 +107,11 @@ public class ShopController {
             model.addAttribute("message", "포인트가 부족합니다.");
         }
 
+        // 상점 페이지에 필요한 데이터 추가
         model.addAttribute("points", loggedInUser.getPoints());
         model.addAttribute("items", ShopItem.getShopItems());
         model.addAttribute("badges", badgeRepository.findAll());
         return "shop";
     }
+
 }
