@@ -25,8 +25,8 @@ public class User {
     private String name;       // 이름
     private String birthDate;  // 생년월일
     private String phone;
-    
     private int points;
+    private String badge; // 현재 보유중인 훈장 이름
     
     @Column(name = "last_login_date")
     private LocalDate lastLoginDate;
@@ -106,7 +106,14 @@ public class User {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+    public String getBadge() {
+        return badge;
+    }
 
+    public void setBadge(String badge) {
+        this.badge = badge;
+    }
+    
     
     public int getPoints() { return points; }
     public void setPoints(int points) { this.points = points; }

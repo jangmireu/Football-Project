@@ -84,56 +84,84 @@ body {
 
 
 /* 카드 스타일 */
+/* 카드 컨테이너 스타일 */
 .card-container {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 20px;
 	justify-content: center;
+	margin-bottom: 40px; /* 컨테이너 간 간격 추가 */
 }
 
+
 .card {
-	background-color: white;
-	width: 250px; /* 카드 너비를 늘림 */
+	background-color: #fff;
+	width: 250px; /* 카드 너비 */
 	padding: 20px;
 	font-weight: bold;
-	border-radius: 8px;
-	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+	border-radius: 12px; /* 둥근 테두리 */
+	box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); /* 부드러운 그림자 */
 	text-align: center;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-between;
+	transition: transform 0.2s ease, box-shadow 0.2s ease; /* 호버 시 부드러운 애니메이션 */
+}
 
+/* 카드 호버 효과 */
+.card:hover {
+	transform: translateY(-5px); /* 살짝 위로 이동 */
+	box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* 더 강한 그림자 */
+}
+
+/* 카드 이미지 스타일 */
+.card img {
+	max-width: 150px;
+	height: 150px;
+	border-radius: 8px;
+	object-fit: cover;
+	margin-bottom: 15px;
+	transition: transform 0.3s ease; /* 이미지 호버 애니메이션 */
+}
+
+/* 이미지 호버 효과 */
+.card:hover img {
+	transform: scale(1.05); /* 살짝 확대 */
+}
+
+/* 카드 제목 스타일 */
+.card h3 {
+	font-size: 18px;
+	margin: 10px 0;
+	color: #333;
+	text-transform: uppercase; /* 대문자 스타일 */
+	letter-spacing: 1px; /* 문자 간격 */
+}
+
+/* 카드 텍스트 스타일 */
+.card p {
+	font-size: 16px;
+	color: #555;
+	margin: 5px 0;
 }
 
 /* 자세히 보기 링크 스타일 */
 .details-link {
-    color: #007bff;
-    text-decoration: underline;
-    font-size: 16px;
-    margin-bottom: 20px; /* 구매하기 버튼과 충분히 간격 */
-    display: inline-block;
+	color: #007bff;
+	text-decoration: none;
+	font-size: 14px;
+	margin-bottom: 15px;
+	display: inline-block;
+	transition: color 0.2s ease; /* 부드러운 색상 전환 */
 }
 
-.card img {
-	max-width: 150px; /* 이미지 크기 조정 */
-	height: 150px; /* 고정된 높이 */
-	border-radius: 5px;
-	object-fit: cover; /* 이미지를 카드 안에서 비율에 맞춰 잘라서 표시 */
-	margin-bottom: 10px;
+.details-link:hover {
+	color: #0056b3; /* 호버 시 색상 변경 */
+	text-decoration: underline; /* 밑줄 추가 */
 }
 
-.card h3 {
-	font-size: 20px;
-	margin: 15px 0;
-}
-
-.card p {
-	font-size: 18px;
-	color: #333;
-	margin: 5px 0;
-}
-
+/* 카드 버튼 스타일 */
 .card button {
 	margin-top: auto;
 	padding: 10px 20px;
@@ -144,11 +172,14 @@ body {
 	border-radius: 5px;
 	cursor: pointer;
 	width: 100%;
+	transition: background-color 0.3s ease; /* 색상 전환 효과 */
 }
 
+/* 버튼 호버 효과 */
 .card button:hover {
-	background-color: #555;
+	background-color: #0056b3; /* 더 어두운 파란색 */
 }
+
 
 /* 반응형 디자인 */
 @media ( max-width : 768px) {
@@ -310,23 +341,36 @@ body {
 		<p th:if="${message != null}" th:text="${message}"
 			style="color: green;"></p>
 
-		<!-- 상품 카드 컨테이너 -->
-		<div class="card-container">
-			<div class="card" th:each="item : ${items}">
-				<img th:src="@{${item.imageUrl}}" alt="상품 이미지">
-				<h3 th:text="${item.name}">상품 이름</h3>
-				<p th:text="${item.price} + ' 포인트'">가격</p>
-				
-				
-				<a class="details-link" th:href="${item.link}" target="_blank" th:text="'자세히 보기'"></a>
-				
-				
-				<form th:action="@{/purchase}" method="post">
-					<input type="hidden" name="itemId" th:value="${item.id}" />
-					<button type="button" th:onclick="'openModal(' + ${item.id} + ')'">구매하기</button>
-				</form>
-			</div>
-		</div>
+		<!-- 유니폼 카드 행 -->
+<div class="card-container">
+    <div class="card" th:each="item : ${items}">
+        <img th:src="@{${item.imageUrl}}" alt="상품 이미지">
+        <h3 th:text="${item.name}">상품 이름</h3>
+        <p th:text="${item.price} + ' 포인트'">가격</p>
+        <a class="details-link" th:href="${item.link}" target="_blank" th:text="'자세히 보기'"></a>
+        <form th:action="@{/purchase}" method="post">
+            <input type="hidden" name="itemId" th:value="${item.id}" />
+            <button type="button" onclick="openModal(1)">구매하기</button>
+        </form>
+    </div>
+</div>
+
+<!-- 훈장 카드 행 -->
+<div class="card-container">
+    <div class="card" th:each="badge : ${badges}">
+        <img th:src="@{/images/badges/{badgeName}(badgeName=${badge.name})}" alt="훈장 이미지">
+        <h3 th:text="${badge.name}">훈장 이름</h3>
+        <p th:text="${badge.price} + ' 포인트'">가격</p>
+        <p th:text="${badge.description}">훈장 설명</p>
+        <form th:action="@{/purchase/badge}" method="post">
+            <input type="hidden" name="badgeId" th:value="${badge.id}" />
+            <button type="submit">구매하기</button>
+        </form>
+    </div>
+</div>
+		
+		
+		
 	</div>
 	<!-- Chatbot UI -->
 <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
@@ -349,6 +393,9 @@ body {
     <button id="chatbot-toggle" style="width: 70px; height: 70px; background: #333; color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px;">💬</button>
 </div>
 </body>
+
+
+
 </html>
 
 <script>
