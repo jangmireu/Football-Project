@@ -442,12 +442,13 @@ function createChatMessage(data) {
 function sendMessage() {
     const chatInput = document.getElementById("chatInput");
     const message = chatInput.value.trim();
+
     if (message === "") {
         alert("메시지를 입력하세요.");
         return;
     }
-    if (nickname === null) {
-        alert("닉네임을 불러오지 못했습니다.");
+    if (nickname === null || nickname === "Anonymous") {
+        alert("로그인 후에 채팅을 입력할 수 있습니다.");
         return;
     }
     stompClient.send(`/app/sendMessage/${matchId}`, {}, JSON.stringify({
@@ -457,6 +458,7 @@ function sendMessage() {
     }));
     chatInput.value = "";
 }
+
 
 // Enter 키로 메시지 전송
 document.getElementById("chatInput").addEventListener("keydown", function (event) {
@@ -494,6 +496,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 메시지 전송 함수
     async function sendMessage() {
+    	
+    	
         const userInput = chatbotInput.value.trim();
         if (!userInput) return;
 
