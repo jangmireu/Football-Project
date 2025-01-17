@@ -274,6 +274,11 @@ body {
         transform: scale(1);
     }
 }
+
+
+
+
+
 </style>
 </head>
 <body>
@@ -357,7 +362,7 @@ body {
 
 <!-- 훈장 카드 행 -->
 <div class="card-container">
-    <div class="card" th:each="badge : ${badges}">
+    <div class="card badge-card" th:each="badge : ${badges}">
         <img th:src="@{/images/badges/{badgeName}(badgeName=${badge.name})}" alt="훈장 이미지">
         <h3 th:text="${badge.name}">훈장 이름</h3>
         <p th:text="${badge.price} + ' 포인트'">가격</p>
@@ -368,6 +373,7 @@ body {
         </form>
     </div>
 </div>
+
 		
 		
 		
