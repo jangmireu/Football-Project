@@ -2,14 +2,14 @@ package com.example.football.dto;
 
 public class ChatLogDTO {
     private Long id;
-    private String userNickname; // 사용자 닉네임
-    private String content; // 채팅 내용
+    private String user; // 사용자 닉네임
+	private String content; // 채팅 내용
     private String badge; // 사용자 훈장
 
     // 생성자
-    public ChatLogDTO(Long id, String userNickname, String content, String badge) {
+    public ChatLogDTO(Long id, String user, String content, String badge) {
         this.id = id;
-        this.userNickname = userNickname;
+        this.user = user;
         this.content = content;
         this.badge = badge;
     }
@@ -22,15 +22,15 @@ public class ChatLogDTO {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    public void setUser(String user) {
+		this.user = user;
+	}
 
-    public String getUserNickname() {
-        return userNickname;
-    }
-
-    public void setUserNickname(String userNickname) {
-        this.userNickname = userNickname;
-    }
-
+    
+    public String getUser() {
+		return user;
+	}
     public String getContent() {
         return content;
     }
