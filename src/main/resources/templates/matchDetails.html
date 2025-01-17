@@ -392,6 +392,7 @@ async function loadChatLogs() {
     try {
         const response = await fetch(`/api/chat/logs/${matchId}`);
         const logs = await response.json();
+        console.log("API 응답:", logs); // 응답 데이터를 로그로 출력
         const messagesDiv = document.getElementById("messages");
         messagesDiv.innerHTML = "";
         logs.forEach(log => {
@@ -402,6 +403,7 @@ async function loadChatLogs() {
         console.error("채팅 기록 로드 중 오류 발생:", error);
     }
 }
+
 
 
 //채팅 메시지 생성

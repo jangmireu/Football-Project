@@ -1,5 +1,6 @@
 package com.example.football.controller;
 
+import com.example.football.dto.ChatLogDTO;
 import com.example.football.entity.ChatLog;
 import com.example.football.entity.User;
 import com.example.football.repository.UserRepository;
@@ -166,7 +167,8 @@ public class ChatController {
     // 특정 경기의 채팅 기록 조회
     @GetMapping("/logs/{matchId}")
     @ResponseBody
-    public List<ChatLog> getChatLogs(@PathVariable Long matchId) {
+    public List<ChatLogDTO> getChatLogs(@PathVariable Long matchId) {
         return chatLogService.getChatLogs(matchId);
     }
+
 }

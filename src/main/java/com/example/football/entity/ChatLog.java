@@ -2,9 +2,13 @@ package com.example.football.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.time.LocalDateTime;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ChatLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
