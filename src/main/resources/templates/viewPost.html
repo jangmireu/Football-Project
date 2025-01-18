@@ -2,10 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>게시글 상세 보기</title>
+<link
+	href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&display=swap"
+	rel="stylesheet">
+
 <style>
 /* 기본 스타일 */
 body {
-	font-family: Arial, sans-serif;
+	font-family: 'IBM Plex Sans KR', Arial, sans-serif;
 	background-color: #f5f5f5;
 	margin: 0;
 	padding: 0;
@@ -13,7 +17,6 @@ body {
 	justify-content: center;
 	align-items: center;
 	min-height: 100vh;
-	
 }
 
 /* 메인 컨텐츠 */
@@ -42,6 +45,7 @@ h1 {
 	font-size: 14px;
 	color: #555;
 	margin-bottom: 20px;
+	font-weight: bold;
 	border-bottom: 1px solid #ddd;
 	padding-bottom: 10px;
 }
@@ -55,6 +59,19 @@ h1 {
 	font-size: 16px;
 	color: #444;
 	line-height: 1.6;
+}
+
+/* 이미지 섹션 */
+.image-wrapper {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.image-wrapper img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+	box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* 답글 섹션 */
@@ -150,6 +167,7 @@ h1 {
 	background-color: #333;
 	color: white;
 	padding: 10px 20px;
+	font-weight: bold;
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
@@ -163,6 +181,7 @@ h1 {
 /* 버튼 섹션 */
 .button-container {
 	display: flex;
+	font-weight: bold;
 	justify-content: space-between;
 	align-items: center;
 	margin-top: 20px;
@@ -174,6 +193,7 @@ h1 {
 	padding: 10px 20px;
 	border: none;
 	border-radius: 5px;
+	font-weight: bold;
 	font-size: 14px;
 	text-decoration: none;
 	text-align: center;
@@ -192,28 +212,257 @@ h1 {
 	background-color: #c9302c;
 }
 </style>
+<script>
+	// 좋아요 요청 (JSON 응답 가정)
+	async function handleLikePost(postId) {
+		try {
+			const response = await
+			fetch(`/community/${postId}/like`, {
+				method : 'POST'
+			});
+
+			if (response.ok) {
+				// 서버에서 JSON을 받는다. 예: { message: "좋아요가 추가되었습니다.", likes: 10 }
+				const data = await
+				response.json();
+
+				// 좋아요 숫자를 표시하는 요소
+				const likesElement = document.getElementById("likes-count");
+
+				// 좋아요 숫자 업데이트
+				if (likesElement) {
+					likesElement.textContent = data.likes;
+				}
+
+				// 메시지 표시
+				alert(data.message);
+
+			} else {
+				// 응답이 2xx가 아닐 때
+				const errorText = await
+				response.text();
+				alert(`좋아요 처리 중 오류가 발생했습니다: ${errorText}`);
+			}
+		} catch (error) {
+			console.error("Fetch Exception:", error);
+			alert("서버와 통신 중 오류가 발생했습니다.");
+		}
+	}
+
+	// 싫어요 요청
+	async function handleDislikePost(postId) {
+    try {
+        const response = await fetch(`/community/${postId}/dislike`, {
+            method: 'POST'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+
+            // 싫어요 숫자 업데이트
+            const dislikesElement = document.getElementById("dislikes-count");
+            if (dislikesElement) {
+                dislikesElement.textContent = data.dislikes;
+            }
+
+            alert(data.message);
+        } else {
+            const errorText = await response.text();
+            alert(`싫어요 처리 중 오류가 발생했습니다: ${errorText}`);
+        }
+    } catch (error) {
+        console.error("Fetch Exception:", error);
+        alert("서버와 통신 중 오류가 발생했습니다.");
+    }
+}
+
+	async function handleLikeReply(replyId, userId) {
+		if (!userId) {
+			alert("로그인 후 좋아요를 누를 수 있습니다."); // 로그인되지 않은 경우 처리
+			return;
+		}
+
+		try {
+			const response = await
+			fetch(`/community/reply/${replyId}/like?userId=${userId}`, {
+				method : 'POST',
+			});
+			const result = await
+			response.text();
+			const likeCountSpan = document
+					.getElementById(`reply-likes-count-${replyId}`);
+			let currentLikes = parseInt(likeCountSpan.textContent);
+
+			if (response.ok) {
+				if (result === "답글 좋아요가 추가되었습니다.") {
+					likeCountSpan.textContent = currentLikes + 1;
+				} else if (result === "답글 좋아요가 취소되었습니다.") {
+					likeCountSpan.textContent = currentLikes - 1;
+				}
+			} else {
+				alert("좋아요 처리 중 오류가 발생했습니다.");
+			}
+		} catch (error) {
+			console.error(error);
+			alert("오류가 발생했습니다.");
+		}
+	}
+
+	// 드롭다운 메뉴 토글
+	document.addEventListener('DOMContentLoaded', function() {
+		const dropdownButton = document.getElementById('dropdownButton');
+		const dropdownMenu = document.getElementById('dropdownMenu');
+
+		// 버튼 클릭 시 드롭다운 메뉴 표시/숨김
+		dropdownButton.addEventListener('click', function(event) {
+			event.stopPropagation(); // 클릭 이벤트 전파 방지
+			const isDisplayed = dropdownMenu.style.display === 'block';
+			dropdownMenu.style.display = isDisplayed ? 'none' : 'block';
+		});
+
+		// 메뉴 외부 클릭 시 닫기
+		document.addEventListener('click', function() {
+			dropdownMenu.style.display = 'none';
+		});
+	});
+	
+	document.addEventListener("DOMContentLoaded", function () {
+	    const chatbotToggle = document.getElementById("chatbot-toggle");
+	    const chatbotWindow = document.getElementById("chatbot-window");
+	    const chatbotClose = document.getElementById("chatbot-close");
+	    const chatbotSend = document.getElementById("chatbot-send");
+	    const chatbotInput = document.getElementById("chatbot-input");
+	    const chatbotMessages = document.getElementById("chatbot-messages");
+
+	    // 챗봇 열기/닫기
+	    chatbotToggle.addEventListener("click", () => {
+	        chatbotWindow.style.display = chatbotWindow.style.display === "none" ? "block" : "none";
+	    });
+
+	    chatbotClose.addEventListener("click", () => {
+	        chatbotWindow.style.display = "none";
+	    });
+
+	    // 메시지 전송 함수
+	    async function sendMessage() {
+	        const userInput = chatbotInput.value.trim();
+	        if (!userInput) return;
+
+	        // 사용자 메시지 추가
+	        chatbotMessages.innerHTML += `<div style="text-align: right; margin: 10px 0;">
+	            <span style="display: inline-block; background: #f1f1f1; color: #333; padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 14px;">
+	                ${userInput}
+	            </span>
+	        </div>`;
+	        chatbotInput.value = "";
+
+	        // 서버에 메시지 전송
+	        try {
+	            const response = await fetch("/api/chatbot", {
+	                method: "POST",
+	                headers: { "Content-Type": "application/json" },
+	                body: JSON.stringify({ question: userInput }),
+	            });
+
+	            const data = await response.text();
+
+	            // 챗봇 응답 추가
+	            chatbotMessages.innerHTML += `<div style="text-align: left; margin: 10px 0;">
+	                <span style="display: inline-block; background: #f1f1f1; color: #333; padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 14px;">
+	                    챗봇: ${data}
+	                </span>
+	            </div>`;
+	            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+	        } catch (error) {
+	            chatbotMessages.innerHTML += `<div style="text-align: left; margin: 10px 0;">
+	                <span style="display: inline-block; background: #ffe6e6; color: #d32f2f; padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 14px;">
+	                    챗봇: 서버와 연결할 수 없습니다.
+	                </span>
+	            </div>`;
+	        }
+	    }
+
+	    // 전송 버튼 클릭 이벤트
+	    chatbotSend.addEventListener("click", sendMessage);
+
+	    // 엔터 키 이벤트
+	    chatbotInput.addEventListener("keydown", (event) => {
+	        if (event.key === "Enter" && !event.isComposing) {
+	            event.preventDefault();
+	            sendMessage();
+	        }
+	    });
+	});
+</script>
 </head>
+
 <body>
-	<!-- 메인 컨텐츠 -->
 	<div class="content">
 		<h1 th:text="${post.title}">제목</h1>
 
-		<!-- 작성자, 조회수, 작성일 -->
 		<div class="meta-info">
 			<span><strong>작성자:</strong> <span th:text="${post.author}">작성자</span></span>
 			<span><strong>조회수:</strong> <span th:text="${post.views}">조회수</span></span>
 			<span><strong>작성일:</strong> <span
-				th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span></span>
+				th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+			</span> <span th:if="${post.attachmentPath != null}"> <strong>첨부파일:</strong>
+				<a th:href="@{${post.attachmentPath}}" download>다운로드</a>
+			</span> <span><strong>좋아요:</strong> <span id="likes-count"
+				th:text="${post.likes}">0</span></span> 
+				 <span><strong>싫어요:</strong> 
+        <span id="dislikes-count" th:text="${post.dislikes}">0</span>
+    </span>
 		</div>
 
-		<!-- 내용 -->
+		<div class="image-wrapper" th:if="${post.imagePath != null}">
+			<img
+				th:src="@{/uploads/images/} + ${post.imagePath.split('/images/')[1]}"
+				alt="첨부 이미지">
+		</div>
+
 		<div class="content-wrapper">
 			<p th:text="${post.content}">내용</p>
 		</div>
 
+		<div style="margin-top: 20px; text-align: center;">
+			<span id="likes-count-${post.id}"> <!-- 좋아요 버튼 -->
+				<button th:onclick="'handleLikePost(' + ${post.id} + ')'"
+					style="background: none; border: none; cursor: pointer;">
+					<img src="/like.png" alt="좋아요" style="width: 30px; height: 30px;">좋아요
+				</button> 				
+				 <!-- 싫어요 버튼 -->
+    <button th:onclick="'handleDislikePost(' + ${post.id} + ')'" 
+            style="background: none; border: none; cursor: pointer;">
+        <img src="/dislike.png" alt="싫어요" style="width: 30px; height: 30px;">싫어요
+    </button>
+		</div>
+
+
+
 		<!-- 답글 섹션 -->
 		<div class="reply-wrapper">
-			<h2>답글</h2>
+			<div
+				style="margin-bottom: 20px; position: relative; display: inline-block;">
+				<!-- 드롭다운 버튼 -->
+				<button id="dropdownButton"
+					style="padding: 0; background: none; border: none; cursor: pointer;">
+					<img src="/sort.png" alt="정렬" style="width: 30px; height: 30px;">
+				</button>
+
+				<!-- 드롭다운 메뉴 -->
+				<div id="dropdownMenu"
+					style="display: none; position: absolute; background-color: white; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); min-width: 150px; z-index: 100;">
+					<a th:href="@{/community/{id}(id=${post.id}, sort='latest')}"
+						style="display: block; padding: 10px; text-decoration: none; font-weight: bold; color: #333;">
+						최신순 </a> <a th:href="@{/community/{id}(id=${post.id}, sort='likes')}"
+						style="display: block; padding: 10px; text-decoration: none; font-weight: bold; color: #333;">
+						좋아요순 </a> <a
+						th:href="@{/community/{id}(id=${post.id}, sort='oldest')}"
+						style="display: block; padding: 10px; text-decoration: none; font-weight: bold; color: #333;">
+						오래된순 </a>
+				</div>
+			</div>
+
 
 			<!-- 답글 목록 -->
 			<div class="reply-list">
@@ -223,6 +472,22 @@ h1 {
 							th:text="${#temporals.format(reply.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
 					</p>
 					<p th:text="${reply.content}">답글 내용</p>
+
+					<!-- ====== 여기서부터 답글 좋아요 영역 ====== -->
+					<div style="margin-top: 15px; display: flex; align-items: center;">
+						<button type="button"
+							th:onclick="'handleLikeReply(' + ${reply.id} + ', ' + (${userId} != null ? ${userId} : 0) + ')'"
+							style="background: none; border: none; cursor: pointer;">
+							<img src="/like.png" alt="좋아요" style="width: 20px; height: 20px;">
+						</button>
+						<span style="margin-left: 10px;"
+							th:id="'reply-likes-count-' + ${reply.id}"
+							th:text="${reply.likes != null ? reply.likes : 0}">0</span>
+					</div>
+
+
+
+					<!-- ===================================== -->
 
 					<!-- 수정 및 삭제 버튼 -->
 					<div th:if="${session.loggedInUsername == reply.author}"
@@ -237,9 +502,7 @@ h1 {
 						</form>
 					</div>
 				</div>
-
 			</div>
-
 
 			<!-- 답글 작성 폼 -->
 			<form th:action="@{/community/{id}/reply(id=${post.id})}"
@@ -255,7 +518,7 @@ h1 {
 			<button onclick="location.href='/community'">목록으로</button>
 			<div>
 				<a th:if="${session.loggedInUsername == post.author}"
-					th:href="@{/community/{id}/edit(id=${post.id})}">수정</a>
+					th:href="@{/community/{id}/edit(id=${post.id})}"> 수정 </a>
 				<form th:if="${session.loggedInUsername == post.author}"
 					th:action="@{/community/{id}/delete(id=${post.id})}" method="post"
 					style="display: inline;">
@@ -265,5 +528,25 @@ h1 {
 			</div>
 		</div>
 	</div>
+	<!-- Chatbot UI -->
+<div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <div id="chatbot-window" style="display: none; width: 500px; height: 570px; background: white; border: 1px solid #ccc; box-shadow: 0px 4px 8px rgba(0,0,0,0.2); border-radius: 8px;">
+        <!-- 챗봇 헤더 -->
+        <div style="background: #333; color: white; padding: 10px; border-top-left-radius: 8px; border-top-right-radius: 8px; font-weight: bold;">
+            챗봇
+            <button id="chatbot-close" style="float: right; background: none; border: none; color: white; font-size: 16px; cursor: pointer;">×</button>
+        </div>
+        <!-- 메시지 영역 -->
+        <div id="chatbot-messages" style="padding: 10px; height: 450px; overflow-y: auto; font-size: 14px; border-bottom: 1px solid #ccc;">
+            <!-- 메시지가 여기에 추가됩니다 -->
+        </div>
+        <!-- 입력창 -->
+        <div style="padding: 5px; border-top: 1px solid #ccc; display: flex; gap: 5px; align-items: center;">
+            <input id="chatbot-input" type="text" placeholder="질문을 입력하세요" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+            <button id="chatbot-send" style="padding: 8px 12px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;">전송</button>
+        </div>
+    </div>
+    <button id="chatbot-toggle" style="width: 70px; height: 70px; background: #333; color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px;">💬</button>
+</div>
 </body>
 </html>

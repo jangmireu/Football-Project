@@ -1,0 +1,52 @@
+<!-- diamond_badge.svg -->
+<svg
+  width="200"
+  height="200"
+  viewBox="0 0 200 200"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- 다이아몬드 몸체 -->
+  <polygon
+    fill="#4AC6FF"
+    points="
+      100,10
+      150,100
+      100,190
+      50,100
+    "
+  />
+  <!-- 중앙 별 -->
+  <polygon
+    fill="#FFFFFF"
+    stroke="none"
+    points="
+      100,60
+      108,80
+      128,80
+      112,95
+      118,115
+      100,100
+      82,115
+      88,95
+      72,80
+      92,80
+    "
+  />
+  <!-- 양옆 줄 -->
+  <line
+    x1="30"
+    y1="100"
+    x2="70"
+    y2="100"
+    stroke="#4AC6FF"
+    stroke-width="10"
+  />
+  <line
+    x1="130"
+    y1="100"
+    x2="170"
+    y2="100"
+    stroke="#4AC6FF"
+    stroke-width="10"
+  />
+</svg>
