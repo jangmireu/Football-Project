@@ -60,4 +60,14 @@ public class UserService {
         User user = getUserById(userId);
         return user.getPoints();
     }
+    
+    public void updateUserDetails(Long userId, String nickname, String name, String address, String birthDate, String phone) {
+        User user = getUserById(userId);
+        user.setNickname(nickname);
+        user.setName(name); // 이름 업데이트
+        user.setAddress(address);
+        user.setBirthDate(birthDate);
+        user.setPhone(phone);
+        userRepository.save(user);
+    }
 }

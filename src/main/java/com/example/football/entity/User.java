@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Column;
 
 @Entity
@@ -16,9 +18,20 @@ public class User {
     
     private String username;
     private String password;
-    private String email; // 이메일 필드 추가
+    private String email;
     
+    @Column(unique = true) // 닉네임 중복 방지
+    private String nickname;
+    
+    private String address;
+    private String name;       // 이름
+    private String birthDate;  // 생년월일
+    private String phone;
     private int points;
+    
+    @ManyToOne
+    @JoinColumn(name = "badge_id", referencedColumnName = "id") // Badge 테이블의 외래 키
+    private Badge badge;
     
     @Column(name = "last_login_date")
     private LocalDate lastLoginDate;
@@ -60,6 +73,52 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+    public Badge getBadge() {
+        return badge;
+    }
+
+    public void setBadge(Badge badge) {
+        this.badge = badge;
+    }
+    
     
     public int getPoints() { return points; }
     public void setPoints(int points) { this.points = points; }

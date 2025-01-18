@@ -2,9 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>커뮤니티</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family:'IBM Plex Sans KR', Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f5f5f5;
@@ -13,267 +14,492 @@
             height: 100vh;
         }
 
-        /* 상단 네비게이션 바 */
-        
+/* 상단 네비게이션 바 */
 .navbar {
     background-color: #333;
     padding: 10px;
     display: flex;
+    font-weight: bold;
     justify-content: space-between; /* 로고는 왼쪽, 버튼들은 가운데 */
     align-items: center;
     color: white;
 }
+
 .nav-buttons button {
     background-color: transparent; /* 버튼 배경 제거 */
     border: none; /* 테두리 제거 */
     color: white;
     font-size: 16px;
     cursor: pointer;
+    font-weight: bold;
     padding: 5px 10px; /* 버튼 크기 조정 */
 }
+
 .navbar .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* 로고 이미지와 텍스트 간 간격 */
+	display: flex;
+	align-items: center;
+	gap: 10px; /* 로고 이미지와 텍스트 간 간격 */
 }
 
 .logo-img {
-    width: 40px;
-    height: 40px;
+	width: 40px;
+	height: 40px;
 }
 
 .logo-text {
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
+	font-size: 18px;
+	font-weight: bold;
+	color: white;
 }
 
 .nav-buttons {
-    display: flex;
-    gap: 180px; /* 버튼 사이 간격 */
-    margin: 0 auto; /* 버튼들을 가운데로 정렬 */
+	display: flex;
+	gap: 180px; /* 버튼 사이 간격 */
+	margin: 0 auto; /* 버튼들을 가운데로 정렬 */
 }
 
 .nav-buttons button:hover {
 	text-decoration: underline;
 }
 
-        /* 레이아웃 컨테이너 */
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 5fr; /* 사이드바 1: 콘텐츠 3 비율 */
-            gap: 20px;
-            flex: 1;
-            padding: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr; /* 작은 화면에서는 한 열 */
-            }
-        }
-
-        /* 사이드바 */
-        .sidebar {
-            background-color: #eee;
-            padding: 15px;
-            border-right: 1px solid #ddd;
-            overflow-y: auto;
-        }
-
-        .sidebar h2 {
-            font-size: 18px;
-            margin-top: 0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-
-        th {
-            background-color: #333;
-            color: white;
-            text-align: left;
-        }
-
-        td {
-            text-align: left;
-        }
-
-        /* 콘텐츠 영역 */
-        .content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-        }
-
-        .content h1 {
-            margin-top: 0;
-            text-align: center;
-            padding: 20px;
-        }
-
-        /* 반응형: 화면 크기 축소 시 테이블 스크롤 */
-        .table-container {
-            overflow-x: auto;
-        }
-        
-        /* 공통 버튼 스타일 */
-.common-button {
-    background-color: #333; /* 버튼 배경색 */
-    color: white; /* 글자색 */
-    border: none; /* 테두리 제거 */
-    border-radius: 5px; /* 둥근 모서리 */
-    padding: 10px 20px; /* 여백 */
-    font-size: 16px; /* 글자 크기 */
-    cursor: pointer; /* 마우스 포인터 변경 */
-    text-align: center; /* 텍스트 가운데 정렬 */
-    transition: background-color 0.3s; /* 호버 애니메이션 */
-    margin-bottom: 20px; /* 버튼 아래 간격 추가 */
+/* 레이아웃 컨테이너 */
+.container {
+	display: grid;
+	grid-template-columns: 1fr 5fr; /* 사이드바 1: 콘텐츠 3 비율 */
+	gap: 20px;
+	font-weight: bold;
+	flex: 1;
+	padding: 10px;
 }
 
-	/* 페이징 관련 css */
+@media ( max-width : 768px) {
+	.container {
+		grid-template-columns: 1fr; /* 작은 화면에서는 한 열 */
+	}
+}
 
+/* 사이드바 */
+.sidebar {
+	background-color: #eee;
+	padding: 15px;
+	font-weight: bold;
+	border-right: 1px solid #ddd;
+	overflow-y: auto;
+}
+
+.sidebar h2 {
+	font-size: 20px;
+	margin-top: 0;
+	font-weight: bold;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 20px 0;
+}
+
+table, th, td {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+
+th {
+	background-color: #333;
+	color: white;
+	text-align: left;
+}
+
+td {
+	text-align: left;
+}
+
+/* 콘텐츠 영역 */
+.content {
+	background-color: white;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+	overflow-y: auto;
+}
+
+.content h1 {
+	margin-top: 0;
+	text-align: center;
+	padding: 20px;
+}
+
+/* 반응형: 화면 크기 축소 시 테이블 스크롤 */
+.table-container {
+	overflow-x: auto;
+}
+
+/* 공통 버튼 스타일 */
+.common-button {
+	background-color: #333; /* 버튼 배경색 */
+	color: white; /* 글자색 */
+	border: none; /* 테두리 제거 */
+	border-radius: 5px; /* 둥근 모서리 */
+	padding: 10px 20px; /* 여백 */
+	font-size: 16px; /* 글자 크기 */
+	font-weight: bold;
+	cursor: pointer; /* 마우스 포인터 변경 */
+	text-align: center; /* 텍스트 가운데 정렬 */
+	transition: background-color 0.3s; /* 호버 애니메이션 */
+	margin-bottom: 20px; /* 버튼 아래 간격 추가 */
+}
+
+/* 페이징 관련 css */
 .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
 }
 
 .pagination a {
-    margin: 0 5px;
-    padding: 8px 12px;
-    text-decoration: none;
-    background-color: #333;
-    color: white;
-    border-radius: 5px;
-    font-size: 14px;
+	margin: 0 5px;
+	padding: 8px 12px;
+	text-decoration: none;
+	background-color: #333;
+	font-weight: bold;
+	color: white;
+	border-radius: 5px;
+	font-size: 14px;
 }
 
 .pagination a.active {
-    background-color: #007bff;
-    color: white;
+	background-color: #007bff;
+	color: white;
 }
 
 .pagination a:hover {
-    background-color: #555;
-    color: white;
+	background-color: #555;
+	color: white;
 }
 
+/* 광고배너 */
+/* 배너를 감싸는 컨테이너 */
+.banner-container {
+	width: 1500px; /* 광고 배너 너비 */
+	height: 100px; /* 광고 배너 높이 */
+	margin: 20px auto; /* 위아래 여백 + 가로 중앙 정렬 */
+	overflow: hidden; /* 슬라이드가 넘어가는 부분 숨김 */
+	position: relative; /* 애니메이션 위치 제어 가능 */
+	border: 2px solid #999;
+	background-color: #fff;
+	box-sizing: border-box;
+	display: flex; /* 두 슬라이드를 가로로 나란히 배치 */
+}
 
+/* 실제 슬라이드(이미지 묶음) */
+.banner-slide {
+	display: flex;
+	flex-shrink: 0; /* 폭이 줄어들지 않도록 고정 */
+	animation: slide-left 35s linear infinite; /* 좌측으로 이동하는 애니메이션 */
+}
 
+/* 배너 이미지 스타일 */
+.banner-slide img {
+	width: 300px; /* 각각의 배너 가로폭 */
+	height: 150px; /* 각각의 배너 높이 */
+	object-fit: cover;
+}
 
-    </style>
+/* 무한 롤링 애니메이션 */
+@keyframes slide-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* 예: 4개 * 300px = 1200px 만큼 왼쪽으로 이동 */
+    transform: translateX(-1200px);
+  }
+}
+/* ----- 배너 관련 스타일 끝 ----- */
+
+/*카테고리별 정렬 스타일  시작*/
+    .common-button:hover {
+        background-color: #555;
+    }
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .dropbtn {
+        background-color: #333;
+        color: white;
+        padding: 10px 15px;
+        font-size: 14px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .dropbtn:hover {
+        background-color: #0056b3;
+    }
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: white;
+        box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+        z-index: 1;
+        min-width: 160px;
+        border-radius: 5px;
+    }
+    .dropdown-content a {
+        color: black;
+        padding: 10px 15px;
+        text-decoration: none;
+        display: block;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+    }
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+/*카테고리별 정렬 스타일  끝*/
+</style>
 </head>
 <body>
-    <!-- 상단 네비게이션 바 -->
-    <div class="navbar">
-        <!-- 로고 및 홈페이지 이름 -->
-        <div class="logo">
-            <img src="/logo.png" alt="홈페이지 로고" class="logo-img">
-            <span class="logo-text">PL</span>
-        </div>
+	<!-- 상단 네비게이션 바 -->
+	<div class="navbar">
+		<div class="logo">
+			<a href="http://localhost:8080/matches/list" class="logo-link"> <img
+				src="/logo.png" alt="홈페이지 로고" class="logo-img"> <span
+				class="logo-text"></span>
+			</a>
+		</div>
 
-        <!-- 네비게이션 버튼 -->
-        <div class="nav-buttons">
-            <button onclick="location.href='/matches/list'">메인화면</button>
-            <button onclick="location.href='/community'">커뮤니티</button>
-            <button onclick="location.href='/prediction'">승부예측</button>
-            <button onclick="location.href='/past-matches/list'">결과확인</button>
-            <button onclick="location.href='/shop'">포인트 상점</button>
+		<!-- 네비게이션 버튼 -->
+		<div class="nav-buttons">
+			<button onclick="location.href='/matches/list'">메인화면</button>
+			<button onclick="location.href='/community'">커뮤니티</button>
+			<button onclick="location.href='/prediction'">승부예측</button>
+			<button onclick="location.href='/past-matches/list'">결과확인</button>
+			<button onclick="location.href='/shop'">포인트 상점</button>
+			<button onclick="location.href='/mypage'">마이페이지</button>
+		</div>
+	</div>
+
+	<!-- 메인 컨테이너 -->
+	<div class="container">
+		<!-- 사이드바 -->
+		<div class="sidebar">
+			<button class="common-button" onclick="location.href='/signup'">회원가입</button>
+			<button class="common-button" th:if="${session.loggedInUser == null}"
+				onclick="location.href='/login'">로그인</button>
+			<button class="common-button" th:if="${session.loggedInUser != null}"
+				onclick="location.href='/logout'">로그아웃</button>
+
+			<h2>프리미어 리그 순위</h2>
+			<table>
+				<thead>
+					<tr>
+						<th>순위</th>
+						<th>팀</th>
+						<th>승점</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="team : ${standings}">
+						<td th:text="${team.position}">1</td>
+						<td><img th:src="${team.crestUrl}" alt="팀 로고" width="30"
+							height="30" style="vertical-align: middle;"> <span
+							th:text="${team.koreanTeamName}" style="margin-left: 8px;"></span>
+						</td>
+						<td th:text="${team.points}">승점</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- 메인 콘텐츠: 커뮤니티 게시글 목록 -->
+		<div class="content">
+			<!-- 배너 전용 컨테이너 -->
+			<div class="banner-container">
+				<!-- 첫 번째 슬라이드 -->
+				<div class="banner-slide">
+					<img src="/ad4.png" alt="배너1"> <img src="/ad2.jpg" alt="배너2">
+					<img src="/ad3.jpg" alt="배너3"> <img src="/ad5.jpg" alt="배너4">
+				</div>
+
+				<!-- 두 번째 슬라이드 (첫 번째 슬라이드와 동일하게 복제) -->
+				<div class="banner-slide">
+					<img src="/ad4.png" alt="배너1"> <img src="/ad2.jpg" alt="배너2">
+					<img src="/ad3.jpg" alt="배너3"> <img src="/ad5.jpg" alt="배너4">
+				</div>
+			</div>
+
+
+			<div style="text-align: center; margin-top: 20px;">
+				<h1>커뮤니티</h1>
+			</div>
+			<div
+				style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+				<button class="common-button"
+					onclick="location.href='/community/new'">새 글 작성</button>
+				<div class="dropdown">
+    <button class="dropbtn">정렬</button>
+    <div class="dropdown-content">
+        <a th:href="@{/community(sort='likes', page=${currentPage}, size=10)}" 
+           th:classappend="${sort == 'likes'} ? 'active'">좋아요순</a>
+        <a th:href="@{/community(sort='views', page=${currentPage}, size=10)}" 
+           th:classappend="${sort == 'views'} ? 'active'">조회수순</a>
+        <a th:href="@{/community(sort='recent', page=${currentPage}, size=10)}" 
+           th:classappend="${sort == 'recent'} ? 'active'">최신순</a>
+    </div>
+</div>
+				
+				
+			</div>
+
+			<!-- 게시글 목록 -->
+			<div th:if="${posts.size() > 0}">
+				<div class="table-container">
+					<table>
+						<thead>
+							<tr>
+								<th>제목</th>
+								<th>작성자</th>
+								<th>조회수</th>
+								<th>작성일</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="post : ${posts}">
+								<td>
+									<div style="display: flex; align-items: center; gap: 10px;">
+										<!-- 이미지 미리보기 크기 조정 -->
+										<img th:if="${post.imagePath != null}"
+											th:src="@{${post.imagePath}}" alt="게시글 이미지"
+											style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px;">
+										<!-- 제목 링크 -->
+										<a th:href="@{/community/{id}(id=${post.id})}"
+											th:text="${post.title}"> 제목 </a>
+									</div>
+								</td>
+								<td th:text="${post.author}">작성자</td>
+								<td th:text="${post.views}">조회수</td>
+								<td
+									th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+			<!-- 게시글이 없을 때 표시 -->
+			<div th:if="${posts.size() == 0}">
+				<p>작성된 게시글이 없습니다.</p>
+			</div>
+
+
+			<!-- 페이징 처리 -->
+<div class="pagination" th:if="${totalPages > 1}">
+    <a th:href="@{/community(sort=${sort}, page=${currentPage - 1}, size=10)}"
+       th:if="${currentPage > 0}">이전</a>
+    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+          th:classappend="${i == currentPage} ? 'active'">
+        <a th:href="@{/community(sort=${sort}, page=${i}, size=10)}" th:text="${i + 1}"></a>
+    </span>
+    <a th:href="@{/community(sort=${sort}, page=${currentPage + 1}, size=10)}"
+       th:if="${currentPage < totalPages - 1}">다음</a>
+</div>
+		</div>
+	</div>
+		<!-- Chatbot UI -->
+<div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <div id="chatbot-window" style="display: none; width: 500px; height: 570px; background: white; border: 1px solid #ccc; box-shadow: 0px 4px 8px rgba(0,0,0,0.2); border-radius: 8px;">
+        <!-- 챗봇 헤더 -->
+        <div style="background: #333; color: white; padding: 10px; border-top-left-radius: 8px; border-top-right-radius: 8px; font-weight: bold;">
+            챗봇
+            <button id="chatbot-close" style="float: right; background: none; border: none; color: white; font-size: 16px; cursor: pointer;">×</button>
+        </div>
+        <!-- 메시지 영역 -->
+        <div id="chatbot-messages" style="padding: 10px; height: 450px; overflow-y: auto; font-size: 14px; border-bottom: 1px solid #ccc;">
+            <!-- 메시지가 여기에 추가됩니다 -->
+        </div>
+        <!-- 입력창 -->
+        <div style="padding: 5px; border-top: 1px solid #ccc; display: flex; gap: 5px; align-items: center;">
+            <input id="chatbot-input" type="text" placeholder="질문을 입력하세요" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+            <button id="chatbot-send" style="padding: 8px 12px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;">전송</button>
         </div>
     </div>
-
-    <!-- 메인 컨테이너 -->
-    <div class="container">
-        <!-- 사이드바 -->
-        <div class="sidebar">
-            <button class="common-button" onclick="location.href='/signup'">회원가입</button>
-            <button class="common-button" th:if="${session.loggedInUser == null}"
-                onclick="location.href='/login'">로그인</button>
-            <button class="common-button" th:if="${session.loggedInUser != null}"
-                onclick="location.href='/logout'">로그아웃</button>
-
-            <h2>프리미어 리그 순위</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>순위</th>
-                        <th>팀</th>
-                        <th>승점</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="team : ${standings}">
-                        <td th:text="${team.position}">1</td>
-                        <td>
-                            <img th:src="${team.crestUrl}" alt="팀 로고" width="30" height="30" style="vertical-align: middle;">
-                            <span th:text="${team.koreanTeamName}" style="margin-left: 8px;"></span>
-                        </td>
-                        <td th:text="${team.points}">승점</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- 메인 콘텐츠: 커뮤니티 게시글 목록 -->
-        <div class="content">
-            <h1>커뮤니티</h1>
-            <button class="common-button" onclick="location.href='/community/new'">새 글 작성</button>
-
-            <!-- 게시글 목록 -->
-            <div th:if="${posts.size() > 0}">
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>제목</th>
-                                <th>작성자</th>
-                                <th>조회수</th>
-                                <th>작성일</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="post : ${posts}">
-                                <td>
-                                    <a th:href="@{/community/{id}(id=${post.id})}" th:text="${post.title}">제목</a>
-                                </td>
-                                <td th:text="${post.author}">작성자</td>
-                                <td th:text="${post.views}">조회수</td>
-                                <td th:text="${#temporals.format(post.createdAt, '20yy년 MM월 dd일 HH시 mm분')}">작성일</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!-- 게시글이 없을 때 표시 -->
-            <div th:if="${posts.size() == 0}">
-                <p>작성된 게시글이 없습니다.</p>
-            </div>
-
-            <!-- 페이징 처리 -->
-            <div class="pagination" th:if="${totalPages > 1}">
-                <a th:href="@{/community(page=${currentPage - 1}, size=10)}"
-                    th:if="${currentPage > 0}">이전</a>
-                
-                <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                    th:classappend="${i == currentPage} ? 'active'">
-                    <a th:href="@{/community(page=${i}, size=10)}" th:text="${i + 1}">1</a>
-                </span>
-                
-                <a th:href="@{/community(page=${currentPage + 1}, size=10)}"
-                    th:if="${currentPage < totalPages - 1}">다음</a>
-            </div>
-        </div>
-    </div>
+    <button id="chatbot-toggle" style="width: 70px; height: 70px; background: #333; color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px;">💬</button>
+</div>
 </body>
 </html>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const chatbotToggle = document.getElementById("chatbot-toggle");
+    const chatbotWindow = document.getElementById("chatbot-window");
+    const chatbotClose = document.getElementById("chatbot-close");
+    const chatbotSend = document.getElementById("chatbot-send");
+    const chatbotInput = document.getElementById("chatbot-input");
+    const chatbotMessages = document.getElementById("chatbot-messages");
+
+    // 챗봇 열기/닫기
+    chatbotToggle.addEventListener("click", () => {
+        chatbotWindow.style.display = chatbotWindow.style.display === "none" ? "block" : "none";
+    });
+
+    chatbotClose.addEventListener("click", () => {
+        chatbotWindow.style.display = "none";
+    });
+
+    // 메시지 전송 함수
+    async function sendMessage() {
+        const userInput = chatbotInput.value.trim();
+        if (!userInput) return;
+
+        // 사용자 메시지 추가
+        chatbotMessages.innerHTML += `<div style="text-align: right; margin: 10px 0;">
+            <span style="display: inline-block; background: #f1f1f1; color: #333; padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 14px;">
+                ${userInput}
+            </span>
+        </div>`;
+        chatbotInput.value = "";
+
+        // 서버에 메시지 전송
+        try {
+            const response = await fetch("/api/chatbot", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ question: userInput }),
+            });
+
+            const data = await response.text();
+
+            // 챗봇 응답 추가
+            chatbotMessages.innerHTML += `<div style="text-align: left; margin: 10px 0;">
+                <span style="display: inline-block; background: #f1f1f1; color: #333; padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 14px;">
+                    챗봇: ${data}
+                </span>
+            </div>`;
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        } catch (error) {
+            chatbotMessages.innerHTML += `<div style="text-align: left; margin: 10px 0;">
+                <span style="display: inline-block; background: #ffe6e6; color: #d32f2f; padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 14px;">
+                    챗봇: 서버와 연결할 수 없습니다.
+                </span>
+            </div>`;
+        }
+    }
+
+    // 전송 버튼 클릭 이벤트
+    chatbotSend.addEventListener("click", sendMessage);
+
+    // 엔터 키 이벤트
+    chatbotInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.isComposing) {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+});
+</script>

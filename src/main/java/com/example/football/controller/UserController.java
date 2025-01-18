@@ -61,4 +61,15 @@ public class UserController {
         }
         return "Anonymous"; // 로그인하지 않은 경우 기본값
     }
+    
+    @GetMapping("/api/current-nickname")
+    @ResponseBody
+    public String getCurrentNickname(HttpSession session) {
+        String nickname = (String) session.getAttribute("loggedInNickname"); // 세션에서 닉네임 가져오기
+        if (nickname != null) {
+            return nickname;
+        }
+        return "Anonymous"; // 닉네임이 없을 경우 기본값
+    }
+
 }

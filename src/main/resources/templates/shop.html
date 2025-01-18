@@ -2,23 +2,25 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>포인트 상점</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&display=swap" rel="stylesheet">
 <style>
 /* 기본 스타일 */
 body {
-	font-family: Arial, sans-serif;
-	background-color: #f5f5f5;
-	margin: 0;
-	padding: 0;
-	display: flex;
-	flex-direction: column;
-	height: 100vh;
-}
+            font-family:'IBM Plex Sans KR', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
 
 /* 상단 네비게이션 바 */
 .navbar {
     background-color: #333;
     padding: 10px;
     display: flex;
+    font-weight: bold;
     justify-content: space-between; /* 로고는 왼쪽, 버튼들은 가운데 */
     align-items: center;
     color: white;
@@ -28,6 +30,7 @@ body {
     border: none; /* 테두리 제거 */
     color: white;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
     padding: 5px 10px; /* 버튼 크기 조정 */
 }
@@ -50,6 +53,7 @@ body {
 
 .nav-buttons {
     display: flex;
+    font-weight: bold;
     gap: 180px; /* 버튼 사이 간격 */
     margin: 0 auto; /* 버튼들을 가운데로 정렬 */
 }
@@ -61,6 +65,7 @@ body {
 .content {
 	flex: 1;
 	padding: 20px;
+	font-weight: bold;
 	overflow-y: auto;
 	
 }
@@ -72,51 +77,91 @@ body {
 	justify-content: space-between;
 	margin: 0;
 	text-align: center;
+	font-weight: bold;
 	margin-bottom: 30px;
 }
 
 
 
 /* 카드 스타일 */
+/* 카드 컨테이너 스타일 */
 .card-container {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 20px;
 	justify-content: center;
+	margin-bottom: 40px; /* 컨테이너 간 간격 추가 */
 }
 
+
 .card {
-	background-color: white;
-	width: 250px; /* 카드 너비를 늘림 */
+	background-color: #fff;
+	width: 250px; /* 카드 너비 */
 	padding: 20px;
-	border-radius: 8px;
-	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+	font-weight: bold;
+	border-radius: 12px; /* 둥근 테두리 */
+	box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); /* 부드러운 그림자 */
 	text-align: center;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-between;
+	transition: transform 0.2s ease, box-shadow 0.2s ease; /* 호버 시 부드러운 애니메이션 */
 }
 
+/* 카드 호버 효과 */
+.card:hover {
+	transform: translateY(-5px); /* 살짝 위로 이동 */
+	box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* 더 강한 그림자 */
+}
+
+/* 카드 이미지 스타일 */
 .card img {
-	max-width: 150px; /* 이미지 크기 조정 */
-	height: 150px; /* 고정된 높이 */
-	border-radius: 5px;
-	object-fit: cover; /* 이미지를 카드 안에서 비율에 맞춰 잘라서 표시 */
-	margin-bottom: 10px;
+	max-width: 150px;
+	height: 150px;
+	border-radius: 8px;
+	object-fit: cover;
+	margin-bottom: 15px;
+	transition: transform 0.3s ease; /* 이미지 호버 애니메이션 */
 }
 
+/* 이미지 호버 효과 */
+.card:hover img {
+	transform: scale(1.05); /* 살짝 확대 */
+}
+
+/* 카드 제목 스타일 */
 .card h3 {
-	font-size: 20px;
-	margin: 15px 0;
+	font-size: 18px;
+	margin: 10px 0;
+	color: #333;
+	text-transform: uppercase; /* 대문자 스타일 */
+	letter-spacing: 1px; /* 문자 간격 */
 }
 
+/* 카드 텍스트 스타일 */
 .card p {
-	font-size: 18px;
-	color: #333;
+	font-size: 16px;
+	color: #555;
 	margin: 5px 0;
 }
 
+/* 자세히 보기 링크 스타일 */
+.details-link {
+	color: #007bff;
+	text-decoration: none;
+	font-size: 14px;
+	margin-bottom: 15px;
+	display: inline-block;
+	transition: color 0.2s ease; /* 부드러운 색상 전환 */
+}
+
+.details-link:hover {
+	color: #0056b3; /* 호버 시 색상 변경 */
+	text-decoration: underline; /* 밑줄 추가 */
+}
+
+/* 카드 버튼 스타일 */
 .card button {
 	margin-top: auto;
 	padding: 10px 20px;
@@ -127,11 +172,14 @@ body {
 	border-radius: 5px;
 	cursor: pointer;
 	width: 100%;
+	transition: background-color 0.3s ease; /* 색상 전환 효과 */
 }
 
+/* 버튼 호버 효과 */
 .card button:hover {
-	background-color: #555;
+	background-color: #0056b3; /* 더 어두운 파란색 */
 }
+
 
 /* 반응형 디자인 */
 @media ( max-width : 768px) {
@@ -147,14 +195,100 @@ body {
 		width: 100%; /* 모바일에서는 카드가 전체 너비를 차지하도록 설정 */
 	}
 }
+
+.modal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed; /* 화면 전체에서 고정 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 배경 어두운 투명 효과 */
+    z-index: 1000; /* 다른 요소 위에 표시 */
+    justify-content: center;
+    align-items: center;
+}
+
+/* 모달 콘텐츠 */
+.modal-content {
+    background-color: white; /* 흰색 배경 */
+    border-radius: 8px; /* 부드러운 모서리 */
+    width: 90%; /* 기본 너비 (작은 화면) */
+    max-width: 500px; /* 최대 너비 */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+    position: relative; /* 내부 위치를 조정 가능하게 설정 */
+    animation: fadeIn 0.3s ease-in-out; /* 부드러운 애니메이션 */
+}
+
+/* 닫기 버튼 */
+.modal-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+    background-color: #555;
+}
+
+/* 취소 버튼 */
+.modal-content button.cancel {
+    background-color: #d9534f;
+}
+
+.modal-content button.cancel:hover {
+    background-color: #c9302c;
+}
+
+/* 모달 닫기 버튼 */
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #333;
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+
+
+
 </style>
 </head>
 <body>
 	<!-- 상단 네비게이션 바 -->
 	<div class="navbar">
 		<div class="logo">
-			<img src="/logo.png" alt="홈페이지 로고" class="logo-img"> <span
-				class="logo-text">PL</span>
+			<a href="http://localhost:8080/matches/list" class="logo-link"> <img
+				src="/logo.png" alt="홈페이지 로고" class="logo-img"> <span
+				class="logo-text"></span>
+			</a>
 		</div>
 		<div class="nav-buttons">
 			<button onclick="location.href='/matches/list'">메인화면</button>
@@ -162,8 +296,35 @@ body {
 			<button onclick="location.href='/prediction'">승부예측</button>
 			<button onclick="location.href='/past-matches/list'">결과확인</button>  <!-- 추가된 버튼 -->
 			<button onclick="location.href='/shop'">포인트 상점</button>
+			<button onclick="location.href='/mypage'">마이페이지</button>
 		</div>
 	</div>
+	
+	<!-- 구매 모달 -->
+<div id="purchaseModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <h2>아이템 구매</h2>
+        <p>선택한 아이템: <span id="itemName"></span></p>
+        <p>가격: <span id="itemPrice"></span> 포인트</p>
+        <form th:action="@{/purchase}" method="post">
+    <input type="hidden" name="itemId" id="itemId">
+    <label for="size">사이즈 선택:</label>
+    <select name="size" id="size" required>
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+        <option value="2XL">2XL</option>
+        <option value="3XL">3XL</option>
+    </select>
+    <br><br>
+    <button type="submit" class="confirm">구매 결정</button>
+    <button type="button" class="cancel" onclick="closeModal()">취소</button>
+</form>
+
+    </div>
+</div>
 
 	<!-- 포인트 상점 콘텐츠 -->
 	<div class="content">
@@ -174,22 +335,169 @@ body {
     <span th:if="${session.loggedInUser != null}" th:text="${session.loggedInUser?.points ?: 0} + '점'"></span>
     <span th:if="${session.loggedInUser == null}">0점</span>
 </p>
+
+<p style="color: red; font-size: 14px; margin-top: 10px;">
+            ※회원가입 진행 시 설정한 주소로 배송됩니다. 구매 전 마이페이지에서 주소를 확인해주세요.※
+        </p>
+        <p style="color: red; font-size: 14px; margin-top: 10px;">
+            ※구매 진행 시 사이즈 확인을 꼭 부탁드립니다. 구매 후에는 반품이 불가능하오니 신중한 선택 부탁드립니다.※
+        </p>
 		</div>
 		<p th:if="${message != null}" th:text="${message}"
 			style="color: green;"></p>
 
-		<!-- 상품 카드 컨테이너 -->
-		<div class="card-container">
-			<div class="card" th:each="item : ${items}">
-				<img th:src="@{${item.imageUrl}}" alt="상품 이미지">
-				<h3 th:text="${item.name}">상품 이름</h3>
-				<p th:text="${item.price} + ' 포인트'">가격</p>
-				<form th:action="@{/purchase}" method="post">
-					<input type="hidden" name="itemId" th:value="${item.id}" />
-					<button type="submit">구매하기</button>
-				</form>
-			</div>
-		</div>
+		<!-- 유니폼 카드 행 -->
+<div class="card-container">
+    <div class="card" th:each="item : ${items}">
+        <img th:src="@{${item.imageUrl}}" alt="상품 이미지">
+        <h3 th:text="${item.name}">상품 이름</h3>
+        <p th:text="${item.price} + ' 포인트'">가격</p>
+        <a class="details-link" th:href="${item.link}" target="_blank" th:text="'자세히 보기'"></a>
+        <form th:action="@{/purchase}" method="post">
+            <input type="hidden" name="itemId" th:value="${item.id}" />
+            <button type="button" onclick="openModal(1)">구매하기</button>
+        </form>
+    </div>
+</div>
+
+<!-- 훈장 카드 행 -->
+<div class="card-container">
+    <div class="card badge-card" th:each="badge : ${badges}">
+        <img th:src="@{'/' + ${badge.imageUrl}}" alt="훈장 이미지">
+        <h3 th:text="${badge.name}">훈장 이름</h3>
+        <p th:text="${badge.price} + ' 포인트'">가격</p>
+        <p th:text="${badge.description}">훈장 설명</p>
+        <form th:action="@{/purchase/badge}" method="post">
+            <input type="hidden" name="badgeId" th:value="${badge.id}" />
+            <button type="submit">구매하기</button>
+        </form>
+    </div>
+</div>
+
+		
+		
+		
 	</div>
+	<!-- Chatbot UI -->
+<div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <div id="chatbot-window" style="display: none; width: 500px; height: 570px; background: white; border: 1px solid #ccc; box-shadow: 0px 4px 8px rgba(0,0,0,0.2); border-radius: 8px;">
+        <!-- 챗봇 헤더 -->
+        <div style="background: #333; color: white; padding: 10px; border-top-left-radius: 8px; border-top-right-radius: 8px; font-weight: bold;">
+            챗봇
+            <button id="chatbot-close" style="float: right; background: none; border: none; color: white; font-size: 16px; cursor: pointer;">×</button>
+        </div>
+        <!-- 메시지 영역 -->
+        <div id="chatbot-messages" style="padding: 10px; height: 450px; overflow-y: auto; font-size: 14px; border-bottom: 1px solid #ccc;">
+            <!-- 메시지가 여기에 추가됩니다 -->
+        </div>
+        <!-- 입력창 -->
+        <div style="padding: 5px; border-top: 1px solid #ccc; display: flex; gap: 5px; align-items: center;">
+            <input id="chatbot-input" type="text" placeholder="질문을 입력하세요" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+            <button id="chatbot-send" style="padding: 8px 12px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;">전송</button>
+        </div>
+    </div>
+    <button id="chatbot-toggle" style="width: 70px; height: 70px; background: #333; color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px;">💬</button>
+</div>
 </body>
+
+
+
 </html>
+
+<script>
+function openModal(itemId) {
+    const modal = document.getElementById('purchaseModal');
+    modal.style.display = 'flex';
+
+    // 서버에서 가져온 아이템 정보 (템플릿에서 전달받는 데이터 활용 가능)
+    const items = [
+        { id: 1, name: "맨시티 유니폼", price: 200000 },
+        { id: 2, name: "리버풀 유니폼", price: 200000 },
+        { id: 3, name: "아스날 유니폼", price: 200000 },
+        { id: 4, name: "첼시 유니폼", price: 200000 },
+        { id: 5, name: "토트넘 유니폼", price: 200000 },
+        { id: 6, name: "맨유 유니폼", price: 200000 }
+    ];
+    const selectedItem = items.find(item => item.id === itemId);
+
+    if (selectedItem) {
+        document.getElementById('itemId').value = selectedItem.id;
+        document.getElementById('itemName').innerText = selectedItem.name;
+        document.getElementById('itemPrice').innerText = selectedItem.price;
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('purchaseModal');
+    modal.style.display = 'none';
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const chatbotToggle = document.getElementById("chatbot-toggle");
+    const chatbotWindow = document.getElementById("chatbot-window");
+    const chatbotClose = document.getElementById("chatbot-close");
+    const chatbotSend = document.getElementById("chatbot-send");
+    const chatbotInput = document.getElementById("chatbot-input");
+    const chatbotMessages = document.getElementById("chatbot-messages");
+
+    // 챗봇 열기/닫기
+    chatbotToggle.addEventListener("click", () => {
+        chatbotWindow.style.display = chatbotWindow.style.display === "none" ? "block" : "none";
+    });
+
+    chatbotClose.addEventListener("click", () => {
+        chatbotWindow.style.display = "none";
+    });
+
+    // 메시지 전송 함수
+    async function sendMessage() {
+        const userInput = chatbotInput.value.trim();
+        if (!userInput) return;
+
+        // 사용자 메시지 추가
+        chatbotMessages.innerHTML += `<div style="text-align: right; margin: 10px 0;">
+            <span style="display: inline-block; background: #f1f1f1; color: #333; padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 14px;">
+                ${userInput}
+            </span>
+        </div>`;
+        chatbotInput.value = "";
+
+        // 서버에 메시지 전송
+        try {
+            const response = await fetch("/api/chatbot", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ question: userInput }),
+            });
+
+            const data = await response.text();
+
+            // 챗봇 응답 추가
+            chatbotMessages.innerHTML += `<div style="text-align: left; margin: 10px 0;">
+                <span style="display: inline-block; background: #f1f1f1; color: #333; padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 14px;">
+                    챗봇: ${data}
+                </span>
+            </div>`;
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        } catch (error) {
+            chatbotMessages.innerHTML += `<div style="text-align: left; margin: 10px 0;">
+                <span style="display: inline-block; background: #ffe6e6; color: #d32f2f; padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 14px;">
+                    챗봇: 서버와 연결할 수 없습니다.
+                </span>
+            </div>`;
+        }
+    }
+
+    // 전송 버튼 클릭 이벤트
+    chatbotSend.addEventListener("click", sendMessage);
+
+    // 엔터 키 이벤트
+    chatbotInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.isComposing) {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+});
+
+</script>

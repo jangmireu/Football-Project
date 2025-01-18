@@ -11,10 +11,15 @@ import com.example.football.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username); // username으로 검색
+    User findByNickname(String nickname); // 닉네임 중복 확인
 
 	User findByUsernameAndPassword(String username, String password);
-	
-	@Query("SELECT u FROM User u WHERE u.username = :username")
-    Optional<User> findOptionalByUsername(@Param("username") String username);
-	
+
+	// Username을 기반으로 Badge와 함께 User를 조회
+	@Query("SELECT u FROM User u LEFT JOIN FETCH u.badge WHERE u.username = :username")
+	Optional<User> findUserWithBadgeByUsername(@Param("username") String username);
+
+	// Nickname을 기반으로 Badge와 함께 User를 조회
+	@Query("SELECT u FROM User u LEFT JOIN FETCH u.badge WHERE u.nickname = :nickname")
+	Optional<User> findUserWithBadgeByNickname(@Param("nickname") String nickname);
 }
