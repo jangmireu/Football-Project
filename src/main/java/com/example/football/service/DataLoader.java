@@ -18,10 +18,11 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (badgeRepository.count() == 0) { // 데이터 중복 방지
-            badgeRepository.save(new Badge(1L, "금색 훈장입니다.", "images/badges/gold_badge.png", "Gold Badge", 1000));
-            badgeRepository.save(new Badge(2L, "은색 훈장입니다.", "images/badges/silver_badge.png", "Silver Badge", 800));
-            badgeRepository.save(new Badge(3L, "동색 훈장입니다.", "images/badges/bronze_badge.png", "Bronze Badge", 500));
-            badgeRepository.save(new Badge(4L, "다이아몬드 훈장입니다.", "images/badges/diamond_badge.svg", "Diamond Badge", 1500));
+            badgeRepository.save(new Badge(1L, "동색 뱃지입니다.", "images/badges/bronze_badge.png", "Bronze Badge", 10000));
+            badgeRepository.save(new Badge(2L, "은색 뱃지입니다", "images/badges/silver_badge.png", "Silver Badge", 30000));
+            badgeRepository.save(new Badge(3L, "금색 뱃지입니다.", "images/badges/gold_badge.png", "Gold Badge", 50000));
+            badgeRepository.save(new Badge(4L, "다이아몬드 뱃지입니다.", "images/badges/diamond_badge.svg", "Diamond Badge", 100000));
+            badgeRepository.save(new Badge(5L, "레전드 뱃지입니다.", "images/badges/diamond_badge.svg", "Legend Badge", 2000000000));
         }
     }
 }
