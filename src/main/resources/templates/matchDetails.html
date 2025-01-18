@@ -199,11 +199,116 @@
         .chat-rules-button:hover {
             background-color: #0056b3;
         }    
-    
+    	
+    	.dynamic-badge {
+    display: inline-block;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 12px;
+    margin-right: 8px;
+    color: white; /* 텍스트 색상 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+    line-height: 1; /* 텍스트 라인 간격 조절 */
+    background: linear-gradient(to right, #ffd700, #ffa500); /* 기본 배경 */
+    animation: pulse 1.5s infinite;
+}
 
+.dynamic-badge.diamond-badge {
+    background: linear-gradient(135deg, #e0ffff, #b9f2ff, #87ceeb); /* 다이아몬드의 빛나는 느낌 */
+    color: #1f3a93; /* 고급스러운 파란색 텍스트 */
+    font-weight: bold; /* 텍스트 강조 */
+    padding: 6px 12px; /* 뱃지 크기 조정 */
+    border: 2px solid rgba(185, 242, 255, 0.8); /* 다이아몬드 같은 테두리 */
+    border-radius: 15px; /* 부드러운 곡선 */
+    box-shadow: 0px 0px 15px rgba(135, 206, 250, 0.8), 0px 0px 25px rgba(135, 206, 250, 0.6); /* 빛나는 효과 */
+    text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.8); /* 텍스트에 빛나는 효과 */
+    animation: diamond-glow 3s infinite alternate; /* 부드럽게 빛나는 애니메이션 */
+    animation: diamond-move 3s infinite alternate;
+}
+
+/* 빛나는 애니메이션 */
+@keyframes diamond-glow {
+    0% {
+        box-shadow: 0px 0px 10px rgba(135, 206, 250, 0.5), 0px 0px 20px rgba(135, 206, 250, 0.3);
+    }
+    100% {
+        box-shadow: 0px 0px 20px rgba(135, 206, 250, 0.8), 0px 0px 30px rgba(135, 206, 250, 0.6);
+    }
+}
+
+/* 움직이는 애니메이션 */
+
+@keyframes diamond-move {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(135, 206, 250, 0.5), 0 0 10px rgba(173, 216, 230, 0.5);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(135, 206, 250, 0.8), 0 0 25px rgba(173, 216, 230, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(135, 206, 250, 0.5), 0 0 10px rgba(173, 216, 230, 0.5);
+    }
+}
+
+
+.dynamic-badge.gold-badge {
+    background: linear-gradient(to right, #ffd700, #ffa500);
+    color: black;
+}
+
+.dynamic-badge.silver-badge {
+    background: linear-gradient(to right, #c0c0c0, #a9a9a9);
+    color: black;
+}
+
+.dynamic-badge.bronze-badge {
+    background: linear-gradient(to right, #cd7f32, #a0522d);
+    color: black;
+}
+
+
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(255, 165, 0, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+    }
+}
+    	
+    	.chat-message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.chat-message .dynamic-badge {
+    margin-right: 8px;
+}
+
+.chat-message strong {
+    margin-right: 5px;
+}
+
+.chat-message .chat-content {
+    color: #333;
+}
+    	
         
     </style>
+    
 </head>
+
 <body>
     <div class="container">
         <h1>실시간 채팅</h1>
@@ -245,20 +350,52 @@
         </div>
 </div>
         
-        <div class="chat-container">
-            <div class="messages" id="messages">
-                <!-- 메시지가 표시될 영역 -->
+       <div class="chat-container">
+    <div class="messages" id="messages">
+        <!-- 메시지가 표시될 영역 -->
+        <div th:each="log : ${chatLogs}" class="chat-message">
+            <div class="badge-wrapper">
+                <span class="dynamic-badge" th:classappend="' ' + ${log.badge.toLowerCase()} + '-badge'" th:text="${log.badge}"></span>
+                <strong th:text="${log.user}">닉네임</strong>
             </div>
-            <div class="message-input">
-                <input type="text" id="chatInput" placeholder="메시지를 입력하세요...">
-                <button onclick="sendMessage()">전송</button>
-            </div>
+            <p th:text="${log.content}">메시지 내용</p>
         </div>
+    </div>
+    <div class="message-input">
+        <input type="text" id="chatInput" placeholder="메시지를 입력하세요...">
+        <button onclick="sendMessage()">전송</button>
+    </div>
+</div>
+
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+
+	<!-- Chatbot UI -->
+<div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <div id="chatbot-window" style="display: none; width: 500px; height: 570px; background: white; border: 1px solid #ccc; box-shadow: 0px 4px 8px rgba(0,0,0,0.2); border-radius: 8px;">
+        <!-- 챗봇 헤더 -->
+        <div style="background: #333; color: white; padding: 10px; border-top-left-radius: 8px; border-top-right-radius: 8px; font-weight: bold;">
+            챗봇
+            <button id="chatbot-close" style="float: right; background: none; border: none; color: white; font-size: 16px; cursor: pointer;">×</button>
+        </div>
+        <!-- 메시지 영역 -->
+        <div id="chatbot-messages" style="padding: 10px; height: 450px; overflow-y: auto; font-size: 14px; border-bottom: 1px solid #ccc;">
+            <!-- 메시지가 여기에 추가됩니다 -->
+        </div>
+        <!-- 입력창 -->
+        <div style="padding: 5px; border-top: 1px solid #ccc; display: flex; gap: 5px; align-items: center;">
+            <input id="chatbot-input" type="text" placeholder="질문을 입력하세요" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+            <button id="chatbot-send" style="padding: 8px 12px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;">전송</button>
+        </div>
+    </div>
+    <button id="chatbot-toggle" style="width: 70px; height: 70px; background: #333; color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px;">💬</button>
+</div>
+</body>
 <script>
+
 let nickname = null;
 
 // 서버에서 닉네임 가져오기
@@ -273,15 +410,19 @@ const socket = new SockJS('/chat-websocket');
 const stompClient = Stomp.over(socket);
 
 // WebSocket 연결
-stompClient.connect({}, function () {
+stompClient.connect({}, 
+	function () {
     console.log("WebSocket 연결 성공");
 
     // 특정 경기의 채팅 채널 구독
     stompClient.subscribe(`/topic/messages/${matchId}`, function (message) {
-        const messageDiv = document.createElement("div");
-        messageDiv.textContent = message.body; // 서버에서 받은 메시지 출력
-        document.getElementById("messages").appendChild(messageDiv);
-    });
+    const data = JSON.parse(message.body); // JSON 데이터 파싱
+    console.log("Received message data:", data); // 데이터 확인
+    const messageDiv = createChatMessage(data); // 메시지 생성
+    document.getElementById("messages").appendChild(messageDiv); // 메시지 추가
+});
+
+
 
     // 기존 채팅 기록 로드
     loadChatLogs();
@@ -292,11 +433,11 @@ async function loadChatLogs() {
     try {
         const response = await fetch(`/api/chat/logs/${matchId}`);
         const logs = await response.json();
+        console.log("API 응답:", logs); // 응답 데이터를 로그로 출력
         const messagesDiv = document.getElementById("messages");
         messagesDiv.innerHTML = "";
         logs.forEach(log => {
-            const messageDiv = document.createElement("div");
-            messageDiv.textContent = `${log.user}: ${log.content}`;
+            const messageDiv = createChatMessage(log);
             messagesDiv.appendChild(messageDiv);
         });
     } catch (error) {
@@ -304,16 +445,51 @@ async function loadChatLogs() {
     }
 }
 
+
+
+//채팅 메시지 생성
+function createChatMessage(data) {
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("chat-message");
+
+    const badgeSpan = document.createElement("span");
+    badgeSpan.classList.add("dynamic-badge");
+
+    if (data.badge) {
+        badgeSpan.classList.add(data.badge.toLowerCase().replace(" ", "-"));
+        badgeSpan.textContent = data.badge; // badge 이름 표시
+        console.log("Badge added:", data.badge); // 디버깅 로그
+    } else {
+        console.log("No badge provided");
+    }
+
+    const userStrong = document.createElement("strong");
+    userStrong.textContent = data.user;
+
+    const contentSpan = document.createElement("span");
+    contentSpan.classList.add("chat-content");
+    contentSpan.textContent = `: ${data.content}`;
+
+    messageDiv.appendChild(badgeSpan);
+    messageDiv.appendChild(userStrong);
+    messageDiv.appendChild(contentSpan);
+
+    return messageDiv;
+}
+
+
+
 // 채팅 메시지 전송
 function sendMessage() {
     const chatInput = document.getElementById("chatInput");
     const message = chatInput.value.trim();
+
     if (message === "") {
         alert("메시지를 입력하세요.");
         return;
     }
-    if (nickname === null) {
-        alert("닉네임을 불러오지 못했습니다.");
+    if (nickname === null || nickname === "Anonymous") {
+        alert("로그인 후에 채팅을 입력할 수 있습니다.");
         return;
     }
     stompClient.send(`/app/sendMessage/${matchId}`, {}, JSON.stringify({
@@ -323,6 +499,7 @@ function sendMessage() {
     }));
     chatInput.value = "";
 }
+
 
 // Enter 키로 메시지 전송
 document.getElementById("chatInput").addEventListener("keydown", function (event) {
@@ -341,7 +518,6 @@ function openModal() {
 function closeModal() {
     document.getElementById("chatRulesModal").style.display = "none";
 }
-
 document.addEventListener("DOMContentLoaded", function () {
     const chatbotToggle = document.getElementById("chatbot-toggle");
     const chatbotWindow = document.getElementById("chatbot-window");
@@ -361,6 +537,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 메시지 전송 함수
     async function sendMessage() {
+    	
+    	
         const userInput = chatbotInput.value.trim();
         if (!userInput) return;
 
@@ -409,31 +587,5 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-
 </script>
-
-
-
-
-	<!-- Chatbot UI -->
-<div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
-    <div id="chatbot-window" style="display: none; width: 500px; height: 570px; background: white; border: 1px solid #ccc; box-shadow: 0px 4px 8px rgba(0,0,0,0.2); border-radius: 8px;">
-        <!-- 챗봇 헤더 -->
-        <div style="background: #333; color: white; padding: 10px; border-top-left-radius: 8px; border-top-right-radius: 8px; font-weight: bold;">
-            챗봇
-            <button id="chatbot-close" style="float: right; background: none; border: none; color: white; font-size: 16px; cursor: pointer;">×</button>
-        </div>
-        <!-- 메시지 영역 -->
-        <div id="chatbot-messages" style="padding: 10px; height: 450px; overflow-y: auto; font-size: 14px; border-bottom: 1px solid #ccc;">
-            <!-- 메시지가 여기에 추가됩니다 -->
-        </div>
-        <!-- 입력창 -->
-        <div style="padding: 5px; border-top: 1px solid #ccc; display: flex; gap: 5px; align-items: center;">
-            <input id="chatbot-input" type="text" placeholder="질문을 입력하세요" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
-            <button id="chatbot-send" style="padding: 8px 12px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;">전송</button>
-        </div>
-    </div>
-    <button id="chatbot-toggle" style="width: 70px; height: 70px; background: #333; color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px;">💬</button>
-</div>
-</body>
 </html>

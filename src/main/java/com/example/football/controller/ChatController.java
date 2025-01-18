@@ -1,6 +1,9 @@
 package com.example.football.controller;
 
+import com.example.football.dto.ChatLogDTO;
 import com.example.football.entity.ChatLog;
+import com.example.football.entity.User;
+import com.example.football.repository.UserRepository;
 import com.example.football.service.ChatLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -19,7 +22,10 @@ public class ChatController {
 
     @Autowired
     private ChatLogService chatLogService;
-
+    
+    @Autowired
+    private UserRepository userRepository;
+    
     // 비속어 리스트
     private static final List<String> BANNED_WORDS = Arrays.asList(
     	    "10새", "10새기", "10새리", "10세리", "10쉐이", "10쉑", "10스", "10쌔",
@@ -95,7 +101,8 @@ public class ChatController {
         private Long matchId; // 경기 ID 추가
         private String user;
         private String content;
-
+        private String badge; // 훈장 정보 추가
+        
         // Getters and Setters
         public Long getMatchId() {
             return matchId;
@@ -120,25 +127,48 @@ public class ChatController {
         public void setContent(String content) {
             this.content = content;
         }
-    }
+        public String getBadge() {
+            return badge;
+        }
 
-    // WebSocket 메시지 처리 및 저장
+        public void setBadge(String badge) {
+            this.badge = badge;
+        }
+    }	
+
+ // WebSocket 메시지 처리 및 저장
     @MessageMapping("/sendMessage/{matchId}")
     @SendTo("/topic/messages/{matchId}")
-    public String handleMessage(@DestinationVariable Long matchId, ChatMessage chatMessage) {
+    public ChatMessage handleMessage(@DestinationVariable Long matchId, ChatMessage chatMessage) {
         // 비속어 필터링
         String filteredContent = filterProfanity(chatMessage.getContent());
         chatMessage.setContent(filteredContent);
 
-        // 채팅 로그 저장
-        chatLogService.saveChatLog(matchId, chatMessage.getUser(), filteredContent);
-        return chatMessage.getUser() + ": " + filteredContent;
+        // 사용자 닉네임으로 DB에서 User 정보 조회
+        User user = userRepository.findUserWithBadgeByNickname(chatMessage.getUser())
+                .orElseThrow(() -> new RuntimeException("User not found: " + chatMessage.getUser()));
+
+        // Badge 데이터 설정
+        if (user.getBadge() != null) {
+            chatMessage.setBadge(user.getBadge().getName()); // Badge 이름 설정
+            System.out.println("User badge: " + user.getBadge().getName()); // 디버깅 로그
+        } else {
+            System.out.println("No badge found for user: " + user.getNickname());
+        }
+
+     // 채팅 로그 저장 (User 객체 전달)
+        chatLogService.saveChatLog(matchId, user, filteredContent);
+
+        // 클라이언트로 메시지와 Badge 정보 반환
+        return chatMessage;
     }
+
 
     // 특정 경기의 채팅 기록 조회
     @GetMapping("/logs/{matchId}")
     @ResponseBody
-    public List<ChatLog> getChatLogs(@PathVariable Long matchId) {
+    public List<ChatLogDTO> getChatLogs(@PathVariable Long matchId) {
         return chatLogService.getChatLogs(matchId);
     }
+
 }
