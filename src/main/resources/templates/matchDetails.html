@@ -483,6 +483,11 @@
             messageDiv.appendChild(contentSpan);
         }
 
+        // ===== 스크롤 최하단으로 이동 추가 =====
+        const messagesDiv = document.getElementById("messages");
+        messagesDiv.appendChild(messageDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight; // 스크롤 최하단 이동
+
         return messageDiv;
     }
 
