@@ -1,0 +1,290 @@
+body {
+    font-family:'IBM Plex Sans KR', Arial, sans-serif;
+    margin: 20px;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    margin: 0 auto;
+    background: #f9f9f9;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    font-weight: 540;
+    color: #333;  
+}
+
+.match-info {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.match-info h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 24px;
+    margin: 0;
+}
+
+.match-info img {
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+}
+
+.score {
+    font-size: 36px;
+    font-weight: 540;
+    color: #333;
+    margin: 10px 0;
+}
+
+.chat-container {
+    border: 2px solid #007bff;
+    border-radius: 15px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.messages {
+    height: 300px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.message-input {
+    display: flex;
+}
+
+.message-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px 0 0 5px;
+}
+
+.message-input button {
+    padding: 10px;
+    background-color: rgb(0, 0, 0);
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+.match-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.team {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 150px;
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.team:last-child {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.vs-text {
+    font-size: 48px;
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 20px;
+    white-space: nowrap;
+}
+
+.team img {
+    width: 60px;
+    height: 60px;
+}
+
+.team span {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.modal-body {
+    font-size: 16px;
+    text-align: left;
+    line-height: 1.5;
+}
+
+.modal-close {
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    background-color: #0056b3;
+}
+
+.chat-rules-button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.chat-rules-button:hover {
+    background-color: #0056b3;
+}    
+
+.dynamic-badge {
+    display: inline-block;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 12px;
+    margin-right: 8px;
+    color: white;
+    text-align: center;
+    line-height: 1;
+    background: linear-gradient(to right, #ffd700, #ffa500);
+    animation: pulse 1.5s infinite;
+}
+
+.dynamic-badge.diamond-badge {
+    background: linear-gradient(135deg, #e0ffff, #b9f2ff, #87ceeb);
+    color: #1f3a93;
+    font-weight: bold;
+    padding: 6px 12px;
+    border: 2px solid rgba(185, 242, 255, 0.8);
+    border-radius: 15px;
+    box-shadow: 0px 0px 15px rgba(135, 206, 250, 0.8), 0px 0px 25px rgba(135, 206, 250, 0.6);
+    text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.8);
+    animation: diamond-glow 3s infinite alternate, diamond-move 3s infinite alternate;
+}
+
+@keyframes diamond-glow {
+    0% {
+        box-shadow: 0px 0px 10px rgba(135, 206, 250, 0.5), 0px 0px 20px rgba(135, 206, 250, 0.3);
+    }
+    100% {
+        box-shadow: 0px 0px 20px rgba(135, 206, 250, 0.8), 0px 0px 30px rgba(135, 206, 250, 0.6);
+    }
+}
+
+@keyframes diamond-move {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(135, 206, 250, 0.5), 0 0 10px rgba(173, 216, 230, 0.5);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(135, 206, 250, 0.8), 0 0 25px rgba(173, 216, 230, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(135, 206, 250, 0.5), 0 0 10px rgba(173, 216, 230, 0.5);
+    }
+}
+
+.dynamic-badge.gold-badge {
+    background: linear-gradient(to right, #ffd700, #ffa500);
+    color: black;
+}
+
+.dynamic-badge.silver-badge {
+    background: linear-gradient(to right, #c0c0c0, #a9a9a9);
+    color: black;
+}
+
+.dynamic-badge.bronze-badge {
+    background: linear-gradient(to right, #cd7f32, #a0522d);
+    color: black;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(255, 165, 0, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+    }
+}
+
+.chat-message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.chat-message .dynamic-badge {
+    margin-right: 8px;
+}
+
+.chat-message strong {
+    margin-right: 5px;
+}
+
+.chat-message .chat-content {
+    color: #333;
+} 

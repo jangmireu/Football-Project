@@ -31,11 +31,14 @@ public class ChatLogService {
     public ChatLog saveChatLog(Long matchId, User user, String content) {
         ChatLog chatLog = new ChatLog();
         chatLog.setMatchId(matchId);
-        chatLog.setUser(user);
+        chatLog.setUser(user); // ← User 엔티티를 정확히 설정
         chatLog.setContent(content);
+
         if (user.getBadge() != null) {
-            chatLog.setBadge(user.getBadge().getName());
+            chatLog.setBadge(user.getBadge().getName()); // Badge 이름 설정
         }
-        return chatLogRepository.save(chatLog);
+
+        return chatLogRepository.save(chatLog); // DB에 저장
     }
+
 }

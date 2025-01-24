@@ -18,6 +18,7 @@ public class ChatLog {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false) // User 엔티티와 관계
     private User user; // 사용자 정보
+    
     @Column(nullable = false)
     private String content; // 채팅 내용
 
