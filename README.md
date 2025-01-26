@@ -13,6 +13,8 @@
  <img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=for-the-badge&logo=Amazon%20EC2&logoColor=white">
  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
  <img src="https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white">
+ <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
+ <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
 </div>
 <br>
 <p align=center><img src=./src/assets/images/velogClone.gif  width=60% /></p>
