@@ -1,53 +1,3 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<title>새 글 작성</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/newPost.css">
-</head>
-<body>
-    <div class="form-container">
-        <form th:action="@{/community}" method="post" enctype="multipart/form-data">
-            <label for="title">제목</label>
-            <input type="text" id="title" name="title" required>
-
-            <label for="content">내용</label>
-            <textarea id="content" name="content" rows="5" required></textarea>
-
-            <label for="image">이미지 첨부:</label>
-            <input type="file" id="image" name="image" accept="image/*">
-
-            <label for="attachment">파일 첨부:</label>
-            <input type="file" id="attachment" name="attachment">
-
-            <input type="hidden" name="author" th:value="${author}">
-
-            <button type="submit">작성</button>
-        </form>
-    </div>
-    <!-- Chatbot UI -->
-<div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
-    <div id="chatbot-window" style="display: none; width: 500px; height: 570px; background: white; border: 1px solid #ccc; box-shadow: 0px 4px 8px rgba(0,0,0,0.2); border-radius: 8px;">
-        <!-- 챗봇 헤더 -->
-        <div style="background: #333; color: white; padding: 10px; border-top-left-radius: 8px; border-top-right-radius: 8px; font-weight: bold;">
-            챗봇
-            <button id="chatbot-close" style="float: right; background: none; border: none; color: white; font-size: 16px; cursor: pointer;">×</button>
-        </div>
-        <!-- 메시지 영역 -->
-        <div id="chatbot-messages" style="padding: 10px; height: 450px; overflow-y: auto; font-size: 14px; border-bottom: 1px solid #ccc;">
-            <!-- 메시지가 여기에 추가됩니다 -->
-        </div>
-        <!-- 입력창 -->
-        <div style="padding: 5px; border-top: 1px solid #ccc; display: flex; gap: 5px; align-items: center;">
-            <input id="chatbot-input" type="text" placeholder="질문을 입력하세요" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
-            <button id="chatbot-send" style="padding: 8px 12px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;">전송</button>
-        </div>
-    </div>
-    <button id="chatbot-toggle" style="width: 70px; height: 70px; background: #333; color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 22px;">💬</button>
-</div>
-</body>
-</html>
-<script>
 document.addEventListener("DOMContentLoaded", function () {
     const chatbotToggle = document.getElementById("chatbot-toggle");
     const chatbotWindow = document.getElementById("chatbot-window");
@@ -114,5 +64,4 @@ document.addEventListener("DOMContentLoaded", function () {
             sendMessage();
         }
     });
-});
-</script>
+}); 
