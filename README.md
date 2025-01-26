@@ -1,7 +1,7 @@
 <h2 align=center>해외축구 통합 커뮤니티 프로젝트(PL)📚</h2>
 
-<p align=center> 📆 2024.10.1 ~ 2024.12.13</p>
-<p align=center> 📆 2025.01.08 ~ 2025.01.26</p>
+<p align=center> 📆 마이크로디그리 자바 풀스택 과정 2024.10.1 ~ 2024.12.13</p>
+<p align=center> 📆 보완 및 개선점 적용 2025.01.08 ~ 2025.01.26</p>
 
 <div align=center>
  <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=OpenJDK&logoColor=white">
