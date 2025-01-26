@@ -52,16 +52,6 @@
 - HTML5, CSS3, JavaScript
 <br>
 
-> #### ⚙ 프로젝트 실행 해보기
-
-```js
-git clone https://github.com/jangmireu/memorial.git
-npm install
-npm start
-브라우저 localhost:3000 접속
-```
-
-<br>
 
 > #### 📁 프로젝트 구조
 
